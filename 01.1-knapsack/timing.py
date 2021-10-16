@@ -15,4 +15,4 @@ def time_it(N: int):
 
 
 if __name__ == '__main__':
-    time_it(23)
+    time_it(24)

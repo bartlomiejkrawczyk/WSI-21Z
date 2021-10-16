@@ -1,16 +1,14 @@
 import numpy as np
 from typing import List, Tuple
+from itertools import product
 
 
 def backpack_problem_comprehensive(weights: List[int], max_weight: int, values: List[int]) -> Tuple[List[int], int]:
     max_value = 0
     backpack = [0] * len(weights)
-    for i in range(2 ** len(weights)):
+    for binary in product([0, 1], repeat=len(weights)):
         value = 0
         weight = 0
-        binary = bin(i)[2:]
-        binary = [0] * (len(weights) - len(binary)) + \
-            [int(digit) for digit in binary]
         for j, n in enumerate(binary):
             if n == 1:
                 weight += weights[j]

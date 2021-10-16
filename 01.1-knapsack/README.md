@@ -59,8 +59,7 @@ W tej metodzie rozpoczynamy od stworzenia listy złożonej z liczb odpowiadając
 
 - ### Jak dużą instancję problemu (liczba przedmiotów) da się rozwiązać w około minutę metodą zachłanną?
 
-Wykonanie dla 23 przedmiotów zajeło: 39.08709454536438 sekund
-Wykonanie dla 24 przedmiotów zajeło: 81.4859209060669 sekund
+Wykonanie dla 24 przedmiotów zajeło: 45.128666162490845 sekund
 
 - ### Jak bardzo wydłuży obliczenia dodanie jeszcze jednego przedmiotu?
 
