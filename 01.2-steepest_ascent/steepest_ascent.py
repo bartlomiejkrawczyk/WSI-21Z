@@ -1,6 +1,7 @@
 import numpy as np
 from cec2017.functions import f1, f2, f3
 from plot_3d import draw_3d_function_with_plot
+from plot_2d import draw_2d_function_with_arrows
 import operator
 from typing import Callable
 
@@ -103,25 +104,37 @@ def draw_3d_function(
 
     starting_point = np.random.uniform(-10, 10, size=2)
 
-    points = steepest_ascent_steps_advanced(
+    points = steepest_ascent_steps(
         function, starting_point, step_factor)
 
     draw_3d_function_with_plot(function, points)
 
 
+def draw_2d_function(
+        function: Callable[['np.ndarray[float]'], float],
+        step_factor: float) -> None:
+
+    starting_point = np.random.uniform(-10, 10, size=2)
+
+    points = steepest_ascent_steps(
+        function, starting_point, step_factor)
+
+    draw_2d_function_with_arrows(function, points)
+
+
 def main():
-    def func(x):
-        return x[0] ** 2 + 4 * x[1] ** 2
+    def booth_function(x):
+        return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
 
     functions = [
+        (booth_function, -0.05),
         (f1, -0.00000001),
         (f1, -0.1),
         (f2, -0.7),
-        (f3, -0.00005),
-        (func, -0.1)
+        (f3, -0.00005)
     ]
     for function, step_factor in functions:
-        draw_3d_function(function, step_factor)
+        draw_2d_function(function, step_factor)
 
 
 if __name__ == '__main__':

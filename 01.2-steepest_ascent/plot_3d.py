@@ -41,12 +41,12 @@ def add_plot(
 
 def draw_3d_function_with_plot(
         function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[float]') -> None:
+        points: 'np.ndarray[np.ndarray[float]]') -> None:
 
     axes = plt.axes(projection='3d')
     furthest_point = max([max([abs(n) for n in x]) for x in points])
 
-    plot_contour_chart_3d(axes, function, furthest_point + 1)
+    plot_contour_chart_3d(axes, function, furthest_point * 1.25)
 
     points = list(zip(*points))
     add_plot(axes, function, points[0], points[1])
