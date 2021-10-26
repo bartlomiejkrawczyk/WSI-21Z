@@ -3,7 +3,7 @@ from cec2017.functions import f1, f2, f3
 from plot_3d import draw_3d_function_with_plot
 from plot_2d import draw_2d_function_with_arrows
 import operator
-from typing import Callable
+from typing import Callable, List
 
 
 def partial_derivative(
@@ -65,7 +65,7 @@ def steepest_ascent(
 def steepest_ascent_steps(
         function: Callable[['np.ndarray[float]'], float],
         starting_point: 'np.ndarray[float]',
-        step_factor: float) -> 'np.ndarray[np.ndarray[float]]':
+        step_factor: float) -> 'List[np.ndarray[float]]':
 
     points = [starting_point]
 
@@ -78,7 +78,7 @@ def steepest_ascent_steps(
 def steepest_ascent_steps_advanced(
         function: Callable[['np.ndarray[float]'], float],
         starting_point: 'np.ndarray[float]',
-        step_factor: float) -> 'np.ndarray[np.ndarray[float]]':
+        step_factor: float) -> 'List[np.ndarray[float]]':
 
     multiplier = 2
     points = [starting_point]
@@ -100,26 +100,28 @@ def steepest_ascent_steps_advanced(
 
 def draw_3d_function(
         function: Callable[['np.ndarray[float]'], float],
-        step_factor: float) -> None:
+        step_factor: float,
+        function_name: str) -> None:
 
     starting_point = np.random.uniform(-10, 10, size=2)
 
     points = steepest_ascent_steps(
         function, starting_point, step_factor)
 
-    draw_3d_function_with_plot(function, points)
+    draw_3d_function_with_plot(function, points, function_name)
 
 
 def draw_2d_function(
         function: Callable[['np.ndarray[float]'], float],
-        step_factor: float) -> None:
+        step_factor: float,
+        function_name: str) -> None:
 
     starting_point = np.random.uniform(-10, 10, size=2)
 
-    points = steepest_ascent_steps(
+    points = steepest_ascent_steps_advanced(
         function, starting_point, step_factor)
 
-    draw_2d_function_with_arrows(function, points)
+    draw_2d_function_with_arrows(function, points, function_name)
 
 
 def main():
@@ -127,14 +129,14 @@ def main():
         return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
 
     functions = [
-        (booth_function, -0.05),
-        (f1, -0.00000001),
-        (f1, -0.1),
-        (f2, -0.7),
-        (f3, -0.00005)
+        (booth_function, -0.05, "Booth Function, beta = 0.05"),
+        (f1, -0.00000001, "F1 Function, beta = 0.00000001"),
+        (f1, -0.1, "F1 Function, beta = 0.1"),
+        (f2, -0.7, "F2 Function, beta = 0.7"),
+        (f3, -0.00005, "F3 Function, beta = 0.00005")
     ]
-    for function, step_factor in functions:
-        draw_3d_function(function, step_factor)
+    for function, step_factor, function_name in functions:
+        draw_2d_function(function, step_factor, function_name)
 
 
 if __name__ == '__main__':

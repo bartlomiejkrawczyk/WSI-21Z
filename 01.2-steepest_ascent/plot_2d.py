@@ -39,7 +39,8 @@ def add_arrow(point: 'np.ndarray[float]', next: 'np.ndarray[float]'):
 
 def draw_2d_function_with_arrows(
         function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[np.ndarray[float]]') -> None:
+        points: 'np.ndarray[np.ndarray[float]]',
+        function_name: str = 'Contour 2D') -> None:
 
     furthest_point = max([max([abs(n) for n in x]) for x in points])
     plot_contour_chart_2d(function, furthest_point * 1.25)
@@ -47,6 +48,7 @@ def draw_2d_function_with_arrows(
     for i in range(len(points) - 1):
         add_arrow(points[i], points[i + 1])
 
+    plt.title(function_name)
     plt.show()
 
 

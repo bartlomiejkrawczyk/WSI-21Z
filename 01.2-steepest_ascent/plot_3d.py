@@ -8,7 +8,8 @@ from typing import Callable
 def plot_contour_chart_3d(
         axes: plt.Axes,
         function: Callable[['np.ndarray[float]'], float],
-        furthest_point: float) -> None:
+        furthest_point: float,
+        function_name: str) -> None:
 
     plot_step = furthest_point / 200
 
@@ -27,7 +28,7 @@ def plot_contour_chart_3d(
     axes.set_zlabel('z')
     axes.set_xlim3d(-furthest_point, furthest_point)
     axes.set_ylim3d(-furthest_point, furthest_point)
-    axes.set_title('3D contour')
+    axes.set_title(function_name)
 
 
 def add_plot(
@@ -41,12 +42,13 @@ def add_plot(
 
 def draw_3d_function_with_plot(
         function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[np.ndarray[float]]') -> None:
+        points: 'np.ndarray[np.ndarray[float]]',
+        function_name: str = 'Contour 3D') -> None:
 
     axes = plt.axes(projection='3d')
     furthest_point = max([max([abs(n) for n in x]) for x in points])
 
-    plot_contour_chart_3d(axes, function, furthest_point * 1.25)
+    plot_contour_chart_3d(axes, function, furthest_point * 1.25, function_name)
 
     points = list(zip(*points))
     add_plot(axes, function, points[0], points[1])
