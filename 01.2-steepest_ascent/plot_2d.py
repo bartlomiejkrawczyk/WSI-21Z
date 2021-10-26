@@ -1,12 +1,17 @@
 from matplotlib import pyplot as plt
 from matplotlib import ticker
 import numpy as np
-from typing import Callable
 from math import sqrt
+from typing import Callable, List, TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+else:
+    NDArrayFloat = Any
 
 
 def plot_contour_chart_2d(
-        function: Callable[['np.ndarray[float]'], float],
+        function: Callable[[NDArrayFloat], float],
         furthest_point: float) -> None:
 
     plot_step = furthest_point / 200
@@ -24,7 +29,7 @@ def plot_contour_chart_2d(
     # plt.clabel(contour, inline=1, fontsize=10)
 
 
-def add_arrow(point: 'np.ndarray[float]', next: 'np.ndarray[float]'):
+def add_arrow(point: NDArrayFloat, next: NDArrayFloat):
     dx = next[0] - point[0]
     dy = next[1] - point[1]
     length = sqrt(dx ** 2 + dy ** 2)
@@ -34,12 +39,14 @@ def add_arrow(point: 'np.ndarray[float]', next: 'np.ndarray[float]'):
               dx * (length - head_length) / length,
               dy * (length - head_length) / length,
               head_width=head_width,
-              head_length=head_length, fc='k', ec='k')
+              head_length=head_length,
+              width=(length / 500),
+              fc='k', ec='k')
 
 
 def draw_2d_function_with_arrows(
-        function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[np.ndarray[float]]',
+        function: Callable[[NDArrayFloat], float],
+        points: List[NDArrayFloat],
         function_name: str = 'Contour 2D') -> None:
 
     furthest_point = max([max([abs(n) for n in x]) for x in points])

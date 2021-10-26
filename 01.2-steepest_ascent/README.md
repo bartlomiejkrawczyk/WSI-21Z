@@ -36,9 +36,10 @@ Wartość parametru beta wpływa na wielkość wykonanego kroku w kierunku optim
 
 ### Wady:
 
+- Algorytm nie wybiera najkrótszej trasy do optimum
 - Nie modyfikujemy wielkości kroku - dla stosunkowo dużych wartości gradientu wykonujemy wielkie skoki, a dla małych wartości małe, nie zależnie od wartości parametru beta
 - Algorytm nie gwarantuje, że w kolejnych krokach będzie zbliżał się od optimum
 
 ### 3. Wnioski
 
-Algorytm najszybszego wzrostu jest łatwy w implementacji oraz jest w stanie znaleźć optimum nawet dla dużej ilości wymiarów, jednak należy ustalić odpowiedni współczynnik beta.
+Algorytm najszybszego wzrostu jest łatwy w implementacji oraz jest w stanie znaleźć optimum nawet dla dużej ilości wymiarów, jednak należy ustalić odpowiedni współczynnik beta. Gdybyśmy byli w stanie modyfikować współczynnik beta w trakcie działania programu osiągnelibyśmy wynik w mniejszej ilości kroków.

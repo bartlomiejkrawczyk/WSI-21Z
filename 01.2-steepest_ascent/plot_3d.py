@@ -2,12 +2,17 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
 import numpy as np
 from cec2017.functions import f1
-from typing import Callable
+from typing import Callable, List, TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+else:
+    NDArrayFloat = Any
 
 
 def plot_contour_chart_3d(
         axes: plt.Axes,
-        function: Callable[['np.ndarray[float]'], float],
+        function: Callable[[NDArrayFloat], float],
         furthest_point: float,
         function_name: str) -> None:
 
@@ -33,16 +38,16 @@ def plot_contour_chart_3d(
 
 def add_plot(
         axes: plt.Axes,
-        function: Callable[['np.ndarray[float]'], float],
-        X: 'np.ndarray[float]', Y: 'np.ndarray[float]') -> None:
+        function: Callable[[NDArrayFloat], float],
+        X: NDArrayFloat, Y: NDArrayFloat) -> None:
 
     axes.plot(X, Y, [function([x, y])
               for x, y in zip(X, Y)], color='r', marker='.')
 
 
 def draw_3d_function_with_plot(
-        function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[np.ndarray[float]]',
+        function: Callable[[NDArrayFloat], float],
+        points: List[NDArrayFloat],
         function_name: str = 'Contour 3D') -> None:
 
     axes = plt.axes(projection='3d')

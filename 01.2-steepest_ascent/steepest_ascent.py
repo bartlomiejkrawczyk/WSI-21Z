@@ -3,31 +3,37 @@ from cec2017.functions import f1, f2, f3
 from plot_3d import draw_3d_function_with_plot
 from plot_2d import draw_2d_function_with_arrows
 import operator
-from typing import Callable, List
+from typing import Callable, List, TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+else:
+    NDArrayFloat = Any
 
 
 def partial_derivative(
-        function: Callable[['np.ndarray[float]'], float],
-        point: 'np.ndarray[float]',
-        i: int) -> float:
+        function: Callable[[NDArrayFloat], float],
+        point: NDArrayFloat,
+        i: int,
+        delta: float = 1e-10) -> float:
 
-    delta = 1e-10
     new_point = point.copy()
     new_point[i] = point[i] + delta
     return (function(new_point) - function(point)) / delta
 
 
 def gradient(
-        function: Callable[['np.ndarray[float]'], float],
-        point: 'np.ndarray[float]') -> 'np.ndarray[float]':
+        function: Callable[[NDArrayFloat], float],
+        point: NDArrayFloat) -> NDArrayFloat:
 
     return np.array([partial_derivative(function, point, i) for i in range(len(point))])
 
 
 def stop(
-        function: Callable[['np.ndarray[float]'], float],
-        points: 'np.ndarray[np.ndarray[float]]',
-        step_factor: float) -> bool:
+        function: Callable[[NDArrayFloat], float],
+        points: List[NDArrayFloat],
+        step_factor: float,
+        delta: float = 1e-3) -> bool:
 
     if len(points) > 1000:
         print("Exceeded 1000 points")
@@ -35,7 +41,6 @@ def stop(
         return True
 
     point = points[-1]
-    delta = 1e-3
     value = function(point)
 
     comparison_function = operator.ge if step_factor > 0 else operator.le
@@ -54,18 +59,18 @@ def stop(
 
 
 def steepest_ascent(
-        function: Callable[['np.ndarray[float]'], float],
-        point: 'np.ndarray[float]',
-        step_factor: float) -> 'np.ndarray[float]':
+        function: Callable[[NDArrayFloat], float],
+        point: NDArrayFloat,
+        step_factor: float) -> NDArrayFloat:
 
     grad = gradient(function, point) * step_factor
     return np.add(point, grad)
 
 
 def steepest_ascent_steps(
-        function: Callable[['np.ndarray[float]'], float],
-        starting_point: 'np.ndarray[float]',
-        step_factor: float) -> 'List[np.ndarray[float]]':
+        function: Callable[[NDArrayFloat], float],
+        starting_point: NDArrayFloat,
+        step_factor: float) -> 'List[NDArrayFloat]':
 
     points = [starting_point]
 
@@ -76,9 +81,9 @@ def steepest_ascent_steps(
 
 
 def steepest_ascent_steps_advanced(
-        function: Callable[['np.ndarray[float]'], float],
-        starting_point: 'np.ndarray[float]',
-        step_factor: float) -> 'List[np.ndarray[float]]':
+        function: Callable[[NDArrayFloat], float],
+        starting_point: NDArrayFloat,
+        step_factor: float) -> List[NDArrayFloat]:
 
     multiplier = 2
     points = [starting_point]
@@ -99,27 +104,37 @@ def steepest_ascent_steps_advanced(
 
 
 def draw_3d_function(
-        function: Callable[['np.ndarray[float]'], float],
+        function: Callable[[NDArrayFloat], float],
         step_factor: float,
-        function_name: str) -> None:
+        function_name: str,
+        advanced: bool = False) -> None:
 
     starting_point = np.random.uniform(-10, 10, size=2)
 
-    points = steepest_ascent_steps(
-        function, starting_point, step_factor)
+    if advanced:
+        points = steepest_ascent_steps_advanced(
+            function, starting_point, step_factor)
+    else:
+        points = steepest_ascent_steps(
+            function, starting_point, step_factor)
 
     draw_3d_function_with_plot(function, points, function_name)
 
 
 def draw_2d_function(
-        function: Callable[['np.ndarray[float]'], float],
+        function: Callable[[NDArrayFloat], float],
         step_factor: float,
-        function_name: str) -> None:
+        function_name: str,
+        advanced: bool = False) -> None:
 
     starting_point = np.random.uniform(-10, 10, size=2)
 
-    points = steepest_ascent_steps_advanced(
-        function, starting_point, step_factor)
+    if advanced:
+        points = steepest_ascent_steps_advanced(
+            function, starting_point, step_factor)
+    else:
+        points = steepest_ascent_steps(
+            function, starting_point, step_factor)
 
     draw_2d_function_with_arrows(function, points, function_name)
 
@@ -136,7 +151,10 @@ def main():
         (f3, -0.00005, "F3 Function, beta = 0.00005")
     ]
     for function, step_factor, function_name in functions:
-        draw_2d_function(function, step_factor, function_name)
+        draw_2d_function(function, step_factor, function_name, False)
+        # draw_2d_function(function, step_factor, function_name, True)
+        # draw_3d_function(function, step_factor, function_name, False)
+        # draw_3d_function(function, step_factor, function_name, True)
 
 
 if __name__ == '__main__':
