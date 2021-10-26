@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+from matplotlib import ticker
 import numpy as np
 from typing import Callable
 from math import sqrt
@@ -19,7 +20,8 @@ def plot_contour_chart_2d(
             Z[i, j] = function(np.array([X[i, j], Y[i, j]]))
 
     contour = plt.contour(X, Y, Z, 20)
-    plt.clabel(contour, inline=1, fontsize=10)
+    plt.colorbar()
+    # plt.clabel(contour, inline=1, fontsize=10)
 
 
 def add_arrow(point: 'np.ndarray[float]', next: 'np.ndarray[float]'):

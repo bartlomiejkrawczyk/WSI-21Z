@@ -134,7 +134,7 @@ def main():
         (f3, -0.00005)
     ]
     for function, step_factor in functions:
-        draw_2d_function(function, step_factor)
+        draw_3d_function(function, step_factor)
 
 
 if __name__ == '__main__':
