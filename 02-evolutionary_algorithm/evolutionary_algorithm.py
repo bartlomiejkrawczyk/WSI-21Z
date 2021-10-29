@@ -26,6 +26,19 @@ def stop(iteration: int,
          max_iterations: int,
          population: List[List[float]],
          rating: List[float]) -> bool:
+    """
+    Function that indicates whether evolution should stop
+
+    Args:
+        iteration (int): Current iteration of evolutionary algorithm
+        max_iterations (int): Max amount of iterations of evolutionary algorithm
+        population (List[List[float]]): List of points
+        rating (List[float]): Value of a function at points from population
+
+    Returns:
+        bool: Whether evolutionary algorithm should stop
+    """
+
     if iteration >= max_iterations:
         return True
     return False
@@ -94,7 +107,7 @@ def evolve(function: Callable[[List[float]], float],
         if best_rating >= best_rating_mutated:
             best_rating = best_rating_mutated
             best_subject = best_subject_mutated
-            print(best_rating)
+            # print(best_rating)
 
         population = succesion(population, mutated, rating,
                                rating_mutated, elite_count)
@@ -107,7 +120,7 @@ def evolve(function: Callable[[List[float]], float],
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTOR = 10.0
+MUTATION_FACTOR = 1.0
 POPULATION_SIZE = 100
 POPULATION = [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
               for _ in range(POPULATION_SIZE)]
