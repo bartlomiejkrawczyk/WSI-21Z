@@ -1,11 +1,11 @@
 import numpy as np
-from typing import Callable, List, TYPE_CHECKING, Any, Tuple
+from typing import Callable, List, Tuple
 from cec2017.functions import f4
+from random import choices, gauss, random
+from plot_2d import plot_contour_chart_2d
+from matplotlib import pyplot as plt
+from colour import Color
 
-if TYPE_CHECKING:
-    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
-else:
-    NDArrayFloat = Any
 
 """
 Data:
@@ -24,49 +24,62 @@ Result:
 
 def stop(iteration: int,
          max_iterations: int,
-         population: List[NDArrayFloat],
+         population: List[List[float]],
          rating: List[float]) -> bool:
     if iteration >= max_iterations:
         return True
     return False
 
 
-def reproduction(population: List[NDArrayFloat],
+def reproduction(population: List[List[float]],
                  rating: List[float],
-                 mutation_factor: float) -> List[NDArrayFloat]:
-    pass
+                 population_size: float) -> List[List[float]]:
+
+    zipped = [*zip(rating, population)]
+    group_a = choices(zipped, k=population_size)
+    # group_a = population
+    group_b = choices(zipped, k=population_size)
+
+    return [a[1] if a <= b else b[1] for a, b in zip(group_a, group_b)]
 
 
-def genetic_operations(population: List[NDArrayFloat],
+def genetic_operations(population: List[List[float]],
                        mutation_factor: float,
-                       mutation_probability: float) -> List[NDArrayFloat]:
-    pass
+                       mutation_probability: float) -> List[List[float]]:
+
+    return [[x + gauss(0, 1) * mutation_factor if random() < mutation_probability else x for x in subject] for subject in population]
 
 
-def succesion(population: List[NDArrayFloat],
-              mutated: List[NDArrayFloat],
+def succesion(population: List[List[float]],
+              mutated: List[List[float]],
               rating: float,
               rating_mutated: float,
-              elite_count: int) -> List[NDArrayFloat]:
-    result = zip(*sorted(zip(rating + rating_mutated,
-                 population + mutated), reverse=True))[1][:elite_count]
+              elite_count: int) -> List[List[float]]:
+
+    zipped_population = list(
+        zip(*sorted(zip(rating, population))))[1][:elite_count]
+    zipped_mutated = list(
+        zip(*sorted(zip(rating_mutated, mutated))))[1][:len(population) - elite_count]
+
+    return zipped_population + zipped_mutated
 
 
-def evolve(function: Callable[[NDArrayFloat], float],
-           population: List[NDArrayFloat],
+def evolve(function: Callable[[List[float]], float],
+           population: List[List[float]],
            mutation_factor: float,
            population_size: int,
            mutation_probability: float,
            elite_count: int,
-           max_iterations: int) -> Tuple[NDArrayFloat, float]:
+           max_iterations: int) -> Tuple[List[float], float]:
 
     rating = [function(point) for point in population]
     best_rating, best_subject = min(zip(rating, population))
-    pass
 
     t = 0
     # for _ in range(max_iterations):
     while not stop(t, max_iterations, population, rating):
+
+        plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
 
         reproduced = reproduction(population, rating, population_size)
 
@@ -81,6 +94,7 @@ def evolve(function: Callable[[NDArrayFloat], float],
         if best_rating >= best_rating_mutated:
             best_rating = best_rating_mutated
             best_subject = best_subject_mutated
+            print(best_rating)
 
         population = succesion(population, mutated, rating,
                                rating_mutated, elite_count)
@@ -90,8 +104,28 @@ def evolve(function: Callable[[NDArrayFloat], float],
     return best_subject, best_rating
 
 
+MAX_BOUND = 100
+FUNCTION = f4
+
+MUTATION_FACTOR = 10.0
+POPULATION_SIZE = 100
+POPULATION = [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
+              for _ in range(POPULATION_SIZE)]
+MUTATION_PROBABILITY = 0.20
+ELITE_COUNT = 5
+MAX_ITERATIONS = 500
+
+RED = Color("red")
+COLORS = list(RED.range_to(Color("green"), MAX_ITERATIONS))
+
+
 def main():
-    pass
+
+    print(evolve(FUNCTION, POPULATION, MUTATION_FACTOR, POPULATION_SIZE,
+                 MUTATION_PROBABILITY, ELITE_COUNT, MAX_ITERATIONS))
+
+    plot_contour_chart_2d(FUNCTION, MAX_BOUND)
+    plt.show()
 
 
 if __name__ == '__main__':
