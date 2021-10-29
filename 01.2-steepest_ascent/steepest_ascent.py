@@ -70,7 +70,7 @@ def steepest_ascent(
 def steepest_ascent_steps(
         function: Callable[[NDArrayFloat], float],
         starting_point: NDArrayFloat,
-        step_factor: float) -> 'List[NDArrayFloat]':
+        step_factor: float) -> List[NDArrayFloat]:
 
     points = [starting_point]
 
@@ -83,9 +83,9 @@ def steepest_ascent_steps(
 def steepest_ascent_steps_advanced(
         function: Callable[[NDArrayFloat], float],
         starting_point: NDArrayFloat,
-        step_factor: float) -> List[NDArrayFloat]:
+        step_factor: float,
+        multiplier: float = 2) -> List[NDArrayFloat]:
 
-    multiplier = 2
     points = [starting_point]
     best = function(starting_point)
     comparison_function = operator.le if step_factor > 0 else operator.ge
