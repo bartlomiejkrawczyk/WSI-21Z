@@ -92,7 +92,7 @@ def evolve(function: Callable[[List[float]], float],
     # for _ in range(max_iterations):
     while not stop(t, max_iterations, population, rating):
 
-        plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
+        # plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
 
         reproduced = reproduction(population, rating, population_size)
 
