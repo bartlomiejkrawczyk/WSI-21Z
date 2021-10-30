@@ -14,7 +14,7 @@ POPULATION_SIZES = [10, 50, 100]
 
 MUTATION_PROBABILITY = 0.20
 ELITE_COUNTS = [1, 5, 10]
-MAX_ITERATIONS = 500
+MAX_FUNCTION_EVALUATIONS = 10_000
 
 
 def test_algorithm() -> None:
@@ -25,8 +25,9 @@ def test_algorithm() -> None:
         for i, mutation_factor, elite_count, population_size in product(range(25), MUTATION_FACTORS, ELITE_COUNTS, POPULATION_SIZES):
             population = [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
                           for _ in range(population_size)]
+            max_iterations = MAX_FUNCTION_EVALUATIONS / population_size
             point, value = evolve(FUNCTION, population, mutation_factor,
-                                  population_size, MUTATION_PROBABILITY, elite_count, MAX_ITERATIONS)
+                                  population_size, MUTATION_PROBABILITY, elite_count, max_iterations)
 
             writer.writerow([i, mutation_factor, elite_count,
                             population_size, value, point])
