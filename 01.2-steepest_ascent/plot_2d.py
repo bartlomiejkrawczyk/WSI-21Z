@@ -33,7 +33,7 @@ def add_arrow(point: NDArrayFloat, next: NDArrayFloat):
     dx = next[0] - point[0]
     dy = next[1] - point[1]
     length = sqrt(dx ** 2 + dy ** 2)
-    head_width = length / 30
+    head_width = length / 15
     head_length = length / 15
     plt.arrow(point[0], point[1],
               dx * (length - head_length) / length,

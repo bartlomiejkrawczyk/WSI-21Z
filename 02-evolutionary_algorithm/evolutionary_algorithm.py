@@ -69,12 +69,10 @@ def succesion(population: List[List[float]],
               rating_mutated: float,
               elite_count: int) -> List[List[float]]:
 
-    zipped_population = list(
-        zip(*sorted(zip(rating, population))))[1][:elite_count]
-    zipped_mutated = list(
-        zip(*sorted(zip(rating_mutated, mutated))))[1][:len(population) - elite_count]
+    zipped_population = sorted(zip(rating, population))[:elite_count]
+    zipped_result = zipped_population + list(zip(rating_mutated, mutated))
 
-    return zipped_population + zipped_mutated
+    return list(zip(*sorted(zipped_result)))[1][:len(population)]
 
 
 def evolve(function: Callable[[List[float]], float],
@@ -92,7 +90,7 @@ def evolve(function: Callable[[List[float]], float],
     # for _ in range(max_iterations):
     while not stop(t, max_iterations, population, rating):
 
-        # plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
+        plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
 
         reproduced = reproduction(population, rating, population_size)
 
@@ -120,7 +118,7 @@ def evolve(function: Callable[[List[float]], float],
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTOR = 1.0
+MUTATION_FACTOR = 50.0
 POPULATION_SIZE = 100
 POPULATION = [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
               for _ in range(POPULATION_SIZE)]
