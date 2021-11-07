@@ -9,7 +9,8 @@ from typing import Any, List
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTORS = [0.0, 0.1, 1.0, 5.0, 10.0, 50.0, 100.0]
+MUTATION_FACTORS = [0.1, 1.0, 2.0, 3.0, 4.0,
+                    5.0, 10.0, 20.0, 30.0, 40.0, 50.0, 100.0]
 ELITE_COUNTS = [1, 5, 10, 20, 30, 40, 50]
 POPULATION_SIZES = [10, 20, 50, 100, 200, 1000]
 
@@ -18,13 +19,29 @@ MAX_FUNCTION_EVALUATIONS = 10_000
 
 
 def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: List[int] = [5],  population_size: List[int] = [50]):
-    print('Type     ', '=   ', 'Value', 'Min             ',
-          'Average          ', 'Std             ', 'Max         ', sep='\t')
+    print('Type     ',
+          '=   ',
+          'Value',
+          'Min             ',
+          'Average          ',
+          'Std             ',
+          'Max         ',
+          sep='\t')
+
     for mutation, elite, population in product(mutation_factor, elite_count, population_size):
         values = []
         for _ in range(50):
-            values.append(evolve(f4, [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
-                                      for _ in range(population)], mutation, population, elite, MAX_FUNCTION_EVALUATIONS // population - 1)[1])
+            values.append(
+                evolve(
+                    f4,
+                    [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
+                     for _ in range(population)],
+                    mutation,
+                    population,
+                    elite,
+                    MAX_FUNCTION_EVALUATIONS // population - 1
+                )[1]
+            )
 
         if column == 'mutation_factor':
             print(column, '=', mutation, min(values), mean(
