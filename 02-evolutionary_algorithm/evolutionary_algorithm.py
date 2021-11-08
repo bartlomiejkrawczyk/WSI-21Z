@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Callable, List, Tuple
 from cec2017.functions import f4
-from random import choices, gauss, random, sample
+from random import choices, gauss, random
 from plot_2d import plot_contour_chart_2d
 from matplotlib import pyplot as plt
 from colour import Color
@@ -51,7 +51,7 @@ def reproduction(population: List[Point],
 
     return [
         min(
-            sample(population, k=2)
+            choices(population, k=2)
         )
         for _ in range(population_size)]
 
@@ -129,7 +129,7 @@ MAX_FUNCTION_EVALUATIONS = 10_000
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTOR = 10.0
+MUTATION_FACTOR = 2.0
 POPULATION_SIZE = 100
 
 ELITE_COUNT = 5

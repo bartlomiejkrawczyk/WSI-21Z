@@ -72,6 +72,9 @@ population_size | 1000  | 400.00000045087035 | 400.00082624512567 | 0.0023627848
 
 ## Wnioski:
 
+- Algorytm całkiem prosty w implementacji
+- Dla niewielkich wymiarów działa bardzo dobrze
+- Łatwo zwiększyć wymiar działania algorytmu
 
 ## - Wpływ siły mutacji:
 
