@@ -12,6 +12,10 @@ Numer indeksu: 310774
 
 Zaimplementować klasyczny algorytm ewolucyjny bez krzyżowania, z selekcją turniejową i sukcesją elitarną. Dostępny budżet to 10000 ewaluacji funkcji celu. Optymalizujemy funkcję numer 4 z CEC 2017.
 
+## Działanie Algorytmu:
+
+![Gif](./animation.gif)
+
 ## Badanie Wpływu:
 
 Badania wykonane dla domyślnych parametrów:
@@ -19,7 +23,7 @@ Badania wykonane dla domyślnych parametrów:
 - rozmiar elity = 5
 - wielkość populacji = 50
 
-1. Siły mutacji
+## 1. Siły mutacji
 
 
 Type            | Value | Min                | Average            | Std                    | Max
@@ -37,7 +41,7 @@ mutation_factor | 40.0  | 400.00030695179146 | 400.0029615578364  | 0.0024981516
 mutation_factor | 50.0  | 400.0003258418493  | 400.00438075539245 | 0.003637061791620829   | 400.01297088896195
 mutation_factor | 100.0 | 400.00115551722143 | 400.0157379634939  | 0.009687836379298195   | 400.04061264552513
 
-2. Rozmiaru elity
+## 2. Rozmiaru elity
 
 Type        | Value | Min                | Average            | Std                    | Max
 ------------|-------|--------------------|--------------------|------------------------|-------------------
@@ -53,7 +57,7 @@ elite_count | 30    | 400.0000001036102  | 400.00169926618713 | 0.00467800164831
 elite_count | 40    | 400.00000012414085 | 400.00090955935565 | 0.0031891456497810462  | 400.01328428961796
 elite_count | 50    | 400.0000000226477  | 400.00135730202703 | 0.0045081963993773445  | 400.0206889725324
 
-3. Liczby osobników w populacji
+## 3. Liczby osobników w populacji
 
 Type            | Value | Min                | Average            | Std                    | Max
 ----------------|-------|--------------------|--------------------|------------------------|-------------------
@@ -68,37 +72,34 @@ population_size | 1000  | 400.00000045087035 | 400.00082624512567 | 0.0023627848
 
 ## Wnioski:
 
+
 ## - Wpływ siły mutacji:
 
-Im większa siła mutacji tym algorytm ma większe szanse na eksplorację terenu i znalezienie optimum globalnego,
-jednak im mniejsza siła mutacji tym algorytm ma większe szansę na ekploatację dotychczas znalezionego minimum.
+Przy bardzo małej sile mutacji jesteśmy w stanie znaleźć minimum jedynie gdy się nam poszczęści. Algorytm o takim
+współczynniku ma niewielkie szanse na eksplorację. I dlatego też to tutaj osiągamy największe maksimum.
 
-Można to też zaobserwować w wynikach. Najlepszą wartość minimalną znalazł algorytm o sile mutacji 0.1, ponieważ
-szczęśliwym trafem pewien punkt znalazł minimum lokalne i algorytm mógł wyeksploatować je. Lecz był to jedynie
-szczęśliwy traf algorytm o tym współczynniku ma też najgorsze odchylenie standardowe, oraz uzyskał najgorszą średnią.
+Im większy współczynnik tym bardziej nasz algorytm preferuje eksplorację od eksploatacji znalezionych optimów.
+Dlatego też dla wyższej siły mutacji nie znajdujemy dokładnego optimum.
 
-Im bardziej będziemy zwiększali siłę mutacji tym częściej będziemy uzywkiwali zadowalające nas wyniki, jednak
-tutaj też nie możemy przesadzać, ponieważ przy dużym współczynniku szybciej wyjdziemy poza zakres w którym podejrzewamy,
-że znajduje się minimum.
+Aby algorytm działał najlepiej dla danej funkcji powinniśmy wybrać pomiędzy eksploracją i eksploatacją wybierając siłę mutacji pomiędzy 1.0 - 2.0
 
 ## - Wpływ rozmiaru elity:
 
-Wpływ wielkości elity wydaje się nie mieć większego wpływu na wyniki algorytmu.
+Wybranie zerowego rozmiaru elity wydaje się być słabym pomysłem, ponieważ jesteśmy w stanie zgubić najmniejszą wartość i tak również wynika z tabeli.
 
-Może to być spowodowane tym, że przy większych elitach wybieramy jedynie najlepsze osobniki z połączonych zbiorów,
-a nie połączonych zbiorów niewielkiej poprzedniej populacji i zmutowanej populacji. Przez to wyniki wydają się być zbliżone.
+Podobnie gdy wybierzemy wielki rozmiar elity osiągamy wartości odstające od tych wartości mniejszych.
 
-Wybór większej elity zapobiega eksploracji.
+Optymalnym wyborem dla danej funkcji (przy wielkości populacji równej 50) wydaje się być rozmiar elity równy 5, jednak nie ma to większego wpływu na wynik.
 
 
 ## - Wpływ wielkości populacji:
+
 Im większa liczba osobników w populacji tym lepsze jest początkowe rozrzucenie po przestrzeni i znalezienie potencjalnego minimum.
 Im większa liczba osobników w populacji tym więcej potencjalnych minimów można eksploatować.
 
 Jednak im większa liczba osobników tym mniej możemy wykonać iteracji algorytmu przy ograniczonym budżecie wykonywania funkcji.
 
-Z wyników wynika, że średnio dla danej funkcji lepiej wybierać jest większe populacje, jednak przy mniejszych populacjach jest
-więcej czasu na eksploatację i przez to w kolumnie z minimami to właśnie ta z populacją 20 ma znalazła najmniejsze minimum.
+Z wyników wynika, że średnio dla danej funkcji lepiej wybierać jest mniejsze populacje.
 
 
 

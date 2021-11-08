@@ -15,7 +15,7 @@ ELITE_COUNTS = [0, 1, 2, 3, 4, 5, 10, 20, 30, 40, 50]
 POPULATION_SIZES = [5, 10, 15, 20, 50, 100, 200, 1000]
 
 MUTATION_PROBABILITY = 0.20
-MAX_FUNCTION_EVALUATIONS = 10_000
+MAX_FUNCTION_EVALUATIONS = 2_000
 
 
 def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: List[int] = [5],  population_size: List[int] = [50]):
@@ -29,7 +29,7 @@ def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: Li
 
     for mutation, elite, population in product(mutation_factor, elite_count, population_size):
         values = []
-        for _ in range(25):
+        for _ in range(50):
             values.append(
                 evolve(
                     f4,
@@ -55,8 +55,8 @@ def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: Li
 
 
 def main():
-    # generate_table('mutation_factor', mutation_factor=MUTATION_FACTORS)
-    # generate_table('elite_count', elite_count=ELITE_COUNTS)
+    generate_table('mutation_factor', mutation_factor=MUTATION_FACTORS)
+    generate_table('elite_count', elite_count=ELITE_COUNTS)
     generate_table('population_size', population_size=POPULATION_SIZES)
     pass
 

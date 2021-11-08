@@ -85,13 +85,6 @@ def succesion(population: List[Point],
     return heapq.nsmallest(population_size, best_population + mutated)
 
 
-_x_arr = _y_arr = np.arange(-120, 120, 5)
-X, Y = np.meshgrid(_x_arr, _y_arr)
-Z = np.empty(X.shape)
-for i, j in product(range(X.shape[0]), range(X.shape[1])):
-    Z[i, j] = f4(np.array([X[i, j], Y[i, j]]))
-
-
 def evolve(function: Callable[[List[float]], float],
            starting_population: List[List[float]],
            mutation_factor: float,
@@ -122,14 +115,6 @@ def evolve(function: Callable[[List[float]], float],
         if __name__ == '__main__':
             plt.scatter(*zip(*[p.point for p in population]),
                         c=COLORS[t].get_hex(), marker='.')
-            plt.clf()
-            plt.contourf(X, Y, Z, 40)
-            plt.scatter(*zip(*[p.point for p in population]),
-                        c=COLORS[t].get_hex(), marker='.')
-            plt.scatter(best.point[0], best.point[1], c="red", marker='.')
-            plt.savefig(
-                f"./02-evolutionary_algorithm/img/{t:0>3}.png", dpi=175)
-            print(t)
 
         population = succesion(population, mutated,
                                elite_count, population_size)
@@ -144,7 +129,7 @@ MAX_FUNCTION_EVALUATIONS = 10_000
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTOR = 1.0
+MUTATION_FACTOR = 10.0
 POPULATION_SIZE = 100
 
 ELITE_COUNT = 5
