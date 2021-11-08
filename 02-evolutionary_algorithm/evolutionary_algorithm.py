@@ -6,6 +6,9 @@ from plot_2d import plot_contour_chart_2d
 from matplotlib import pyplot as plt
 from colour import Color
 import heapq
+from itertools import product
+from os.path import join as path_join
+from functools import total_ordering
 
 
 """
@@ -23,30 +26,38 @@ Result:
 """
 
 
-def stop(iteration: int,
-         max_iterations: int,
-         population: List[List[float]],
-         rating: List[float]) -> bool:
+@total_ordering
+class Point:
+    def __init__(self, point) -> None:
+        self.point = point
 
-    if iteration >= max_iterations:
-        return True
-    return False
+    def evaluate(self, function):
+        self.rating = function(self.point)
+
+    def __lt__(self, other):
+        return self.rating < other.rating
+
+    def __eq__(self, other):
+        return self.rating == other.rating
 
 
-def reproduction(population: List[List[float]],
-                 rating: List[float],
-                 population_size: int) -> List[List[float]]:
+def reproduction(population: List[Point],
+                 population_size: int) -> List[Point]:
     """
     Tournament Selection
 
     From two points chosen at random the better one is chosen.
     """
 
-    return [min(sample(list(zip(rating, population)), k=2))[1] for _ in range(population_size)]
+    return [
+        min(
+            sample(population, k=2)
+        )
+        for _ in range(population_size)]
 
 
-def genetic_operations(population: List[List[float]],
-                       mutation_factor: float) -> List[List[float]]:
+def genetic_operations(population: List[Point],
+                       mutation_factor: float) -> List[Point]:
     """
     Mutation
 
@@ -54,14 +65,13 @@ def genetic_operations(population: List[List[float]],
     Choose closer distance with greater probability.
     """
 
-    return [[x + gauss(0, 1) * mutation_factor for x in subject] for subject in population]
+    return [Point([x + gauss(0, 1) * mutation_factor for x in subject.point]) for subject in population]
 
 
-def succesion(population: List[List[float]],
-              mutated: List[List[float]],
-              rating: List[float],
-              rating_mutated: List[float],
-              elite_count: int) -> List[List[float]]:
+def succesion(population: List[Point],
+              mutated: List[Point],
+              elite_count: int,
+              population_size: int) -> List[Point]:
     """
     Elitary Succesion
 
@@ -70,50 +80,63 @@ def succesion(population: List[List[float]],
     individuals to match the population_size number.
     """
 
-    zipped_population = heapq.nsmallest(elite_count, zip(rating, population))
-    zipped_result = zipped_population + list(zip(rating_mutated, mutated))
-    zipped_result = heapq.nsmallest(len(population), zipped_result)
+    best_population = heapq.nsmallest(elite_count, population)
 
-    return [i[1] for i in zipped_result]
+    return heapq.nsmallest(population_size, best_population + mutated)
+
+
+_x_arr = _y_arr = np.arange(-120, 120, 5)
+X, Y = np.meshgrid(_x_arr, _y_arr)
+Z = np.empty(X.shape)
+for i, j in product(range(X.shape[0]), range(X.shape[1])):
+    Z[i, j] = f4(np.array([X[i, j], Y[i, j]]))
 
 
 def evolve(function: Callable[[List[float]], float],
-           population: List[List[float]],
+           starting_population: List[List[float]],
            mutation_factor: float,
            population_size: int,
            elite_count: int,
            max_iterations: int) -> Tuple[List[float], float]:
     """Classical evolutionary algorithm"""
 
-    rating = [function(point) for point in population]
-    best_rating, best_subject = min(zip(rating, population))
+    population = [Point(point) for point in starting_population]
+    for p in population:
+        p.evaluate(function)
+    best = min(population)
 
     # t = 0
     # while not stop(t, max_iterations, population, rating):
     for t in range(max_iterations):
-
-        if __name__ == '__main__':
-            plt.scatter(*zip(*population), c=COLORS[t].get_hex(), marker='.')
-
-        reproduced = reproduction(population, rating, population_size)
+        reproduced = reproduction(population, population_size)
 
         mutated = genetic_operations(reproduced, mutation_factor)
 
-        rating_mutated = [function(point) for point in mutated]
+        for p in mutated:
+            p.evaluate(function)
 
-        best_rating_mutated, best_subject_mutated = min(
-            zip(rating_mutated, mutated))
+        best_mutated = min(mutated)
 
-        if best_rating >= best_rating_mutated:
-            best_rating = best_rating_mutated
-            best_subject = best_subject_mutated
+        best = min(best, best_mutated)
 
-        population = succesion(population, mutated, rating,
-                               rating_mutated, elite_count)
+        if __name__ == '__main__':
+            plt.scatter(*zip(*[p.point for p in population]),
+                        c=COLORS[t].get_hex(), marker='.')
+            plt.clf()
+            plt.contourf(X, Y, Z, 40)
+            plt.scatter(*zip(*[p.point for p in population]),
+                        c=COLORS[t].get_hex(), marker='.')
+            plt.scatter(best.point[0], best.point[1], c="red", marker='.')
+            plt.savefig(
+                f"./02-evolutionary_algorithm/img/{t:0>3}.png", dpi=175)
+            print(t)
+
+        population = succesion(population, mutated,
+                               elite_count, population_size)
 
         # t += 1
 
-    return best_subject, best_rating
+    return best.point, best.rating
 
 
 MAX_FUNCTION_EVALUATIONS = 10_000
@@ -121,13 +144,13 @@ MAX_FUNCTION_EVALUATIONS = 10_000
 MAX_BOUND = 100
 FUNCTION = f4
 
-MUTATION_FACTOR = 2.0
-POPULATION_SIZE = 20
+MUTATION_FACTOR = 1.0
+POPULATION_SIZE = 100
 
 ELITE_COUNT = 5
 MAX_ITERATIONS = MAX_FUNCTION_EVALUATIONS // POPULATION_SIZE - 1
 
-POPULATION = [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=2))
+POPULATION = [[random() * 200 - 100 for _ in range(2)]
               for _ in range(POPULATION_SIZE)]
 
 RED = Color("red")

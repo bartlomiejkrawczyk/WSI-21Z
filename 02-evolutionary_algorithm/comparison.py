@@ -11,26 +11,25 @@ FUNCTION = f4
 
 MUTATION_FACTORS = [0.1, 1.0, 2.0, 3.0, 4.0,
                     5.0, 10.0, 20.0, 30.0, 40.0, 50.0, 100.0]
-ELITE_COUNTS = [1, 5, 10, 20, 30, 40, 50]
-POPULATION_SIZES = [10, 20, 50, 100, 200, 1000]
+ELITE_COUNTS = [0, 1, 2, 3, 4, 5, 10, 20, 30, 40, 50]
+POPULATION_SIZES = [5, 10, 15, 20, 50, 100, 200, 1000]
 
 MUTATION_PROBABILITY = 0.20
 MAX_FUNCTION_EVALUATIONS = 10_000
 
 
 def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: List[int] = [5],  population_size: List[int] = [50]):
-    print('Type     ',
-          '=   ',
-          'Value',
-          'Min             ',
-          'Average          ',
-          'Std             ',
-          'Max         ',
+    print('| Type',
+          '| Value',
+          '| Min',
+          '| Average',
+          '| Std',
+          '| Max |',
           sep='\t')
 
     for mutation, elite, population in product(mutation_factor, elite_count, population_size):
         values = []
-        for _ in range(50):
+        for _ in range(25):
             values.append(
                 evolve(
                     f4,
@@ -44,20 +43,20 @@ def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: Li
             )
 
         if column == 'mutation_factor':
-            print(column, '=', mutation, min(values), mean(
-                values), stdev(values),  max(values), sep='\t')
+            print(column, mutation, min(values), mean(
+                values), stdev(values),  max(values),  sep='|')
         elif column == 'elite_count':
-            print(column, '=', elite, min(values), mean(
-                values), stdev(values),  max(values), sep='\t')
+            print(column, elite, min(values), mean(
+                values), stdev(values),  max(values),  sep='|')
         elif column == 'population_size':
-            print(column, '=', population, min(values), mean(
-                values), stdev(values),  max(values), sep='\t')
+            print(column, population, min(values), mean(
+                values), stdev(values),  max(values),  sep='|')
     print()
 
 
 def main():
-    generate_table('mutation_factor', mutation_factor=MUTATION_FACTORS)
-    generate_table('elite_count', elite_count=ELITE_COUNTS)
+    # generate_table('mutation_factor', mutation_factor=MUTATION_FACTORS)
+    # generate_table('elite_count', elite_count=ELITE_COUNTS)
     generate_table('population_size', population_size=POPULATION_SIZES)
     pass
 
