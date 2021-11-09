@@ -315,7 +315,6 @@ class Board:
         for row in range(BOARD_WIDTH):
             for col in range((row+1) % 2, BOARD_WIDTH, 2):
                 # ToDo
-                pass
         return h
 
     def get_possible_moves(self, is_blue_turn):
@@ -430,7 +429,6 @@ class Game:
 
 def minimax_a_b(board, depth):
     # ToDo
-    best_move = None
     return best_move
 
 
@@ -470,5 +468,4 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
-    main()
+main()

@@ -2,9 +2,8 @@ from evolutionary_algorithm import evolve
 from cec2017.functions import f4
 import numpy as np
 from itertools import product
-import csv
 from statistics import stdev, mean
-from typing import Any, List
+from typing import List
 
 MAX_BOUND = 100
 FUNCTION = f4
@@ -18,7 +17,10 @@ MUTATION_PROBABILITY = 0.20
 MAX_FUNCTION_EVALUATIONS = 10_000
 
 
-def generate_table(column, mutation_factor: List[float] = [1.0], elite_count: List[int] = [5],  population_size: List[int] = [50]):
+def generate_table(column,
+                   mutation_factor: List[float] = [1.0],
+                   elite_count: List[int] = [5],
+                   population_size: List[int] = [50]):
     print('| Type',
           '| Value',
           '| Min',

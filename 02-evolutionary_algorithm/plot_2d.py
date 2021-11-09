@@ -21,7 +21,7 @@ def plot_contour_chart_2d(
         for j in range(X.shape[1]):
             Z[i, j] = function([X[i, j], Y[i, j]])
 
-    contour = plt.contour(X, Y, Z, 40)
+    plt.contour(X, Y, Z, 40)
     plt.colorbar()
 
 

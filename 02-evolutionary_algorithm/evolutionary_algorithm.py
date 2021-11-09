@@ -1,4 +1,3 @@
-import numpy as np
 from typing import Callable, List, Tuple
 from cec2017.functions import f4
 from random import choices, gauss, random
@@ -6,8 +5,6 @@ from plot_2d import plot_contour_chart_2d
 from matplotlib import pyplot as plt
 from colour import Color
 import heapq
-from itertools import product
-from os.path import join as path_join
 from functools import total_ordering
 
 
@@ -65,7 +62,10 @@ def genetic_operations(population: List[Point],
     Choose closer distance with greater probability.
     """
 
-    return [Point([x + gauss(0, 1) * mutation_factor for x in subject.point]) for subject in population]
+    return [
+        Point([x + gauss(0, 1) * mutation_factor for x in subject.point])
+        for subject in population
+    ]
 
 
 def succesion(population: List[Point],
@@ -98,8 +98,6 @@ def evolve(function: Callable[[List[float]], float],
         p.evaluate(function)
     best = min(population)
 
-    # t = 0
-    # while not stop(t, max_iterations, population, rating):
     for t in range(max_iterations):
         reproduced = reproduction(population, population_size)
 
@@ -119,8 +117,6 @@ def evolve(function: Callable[[List[float]], float],
         population = succesion(population, mutated,
                                elite_count, population_size)
 
-        # t += 1
-
     return best.point, best.rating
 
 
@@ -138,12 +134,6 @@ MAX_ITERATIONS = MAX_FUNCTION_EVALUATIONS // POPULATION_SIZE - 1
 POPULATION = [[random() * 200 - 100 for _ in range(2)]
               for _ in range(POPULATION_SIZE)]
 
-RED = Color("red")
-GREEN = Color("green")
-BLUE = Color("blue")
-COLORS = list(BLUE.range_to(GREEN, MAX_ITERATIONS // 2))
-COLORS += list(GREEN.range_to(RED, MAX_ITERATIONS - MAX_ITERATIONS // 2))
-
 
 def main():
 
@@ -155,4 +145,10 @@ def main():
 
 
 if __name__ == '__main__':
+    RED = Color("red")
+    GREEN = Color("green")
+    BLUE = Color("blue")
+    COLORS = list(BLUE.range_to(GREEN, MAX_ITERATIONS // 2))
+    COLORS += list(GREEN.range_to(RED, MAX_ITERATIONS - MAX_ITERATIONS // 2))
+
     main()
