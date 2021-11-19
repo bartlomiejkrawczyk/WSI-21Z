@@ -1,9 +1,5 @@
-from checkers import Board, Game, Player, EVALUATION_FUNCTION
+from checkers import Board, Game, Player, EVALUATION_FUNCTION, ai_function
 from math import inf
-from itertools import product
-from typing import List, Tuple
-
-import multiprocessing.pool
 
 
 def evaluate_basic(board: Board) -> float:
@@ -133,6 +129,46 @@ def minimax_full(
         return min(evaluation)
 
 
+def minimax_a_b_recurr_different_algorithm(
+        board: Board,
+        depth: int,
+        evaluation_function: EVALUATION_FUNCTION,
+        alpha: float = -inf,
+        beta: float = inf) -> float:
+
+    moves = board.all_possible_moves()
+
+    if len(moves) == 0 or depth == 0:
+        return evaluation_function(board)
+
+    if board.player == Player.BLUE:
+        max_eval = -inf
+        for move in moves:
+            new_board = board.copy_and_perform_move(move)
+            eval = minimax_a_b_recurr(new_board,
+                                      depth - 1,
+                                      evaluation_function,
+                                      alpha, beta)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if alpha >= beta:
+                break
+        return max_eval
+    else:
+        min_eval = inf
+        for move in moves:
+            new_board = board.copy_and_perform_move(move)
+            eval = minimax_a_b_recurr(new_board,
+                                      depth - 1,
+                                      evaluation_function,
+                                      alpha, beta)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if alpha >= beta:
+                break
+        return min_eval
+
+
 def minimax_a_b_recurr(
         board: Board,
         depth: int,
@@ -173,143 +209,15 @@ def minimax_a_b_recurr(
         return beta
 
 
-PLAYER = [
-    Player.WHITE,
-    Player.BLUE
-]
-
-DEPTHS = [
-    1, 2, 3, 4, 5
-]
-
-EVALUATION_FUNCTIONS = [
-    evaluate_basic,
-    evaluate_version_1,
-    evaluate_version_2,
-    evaluate_version_3
-]
-
-EVALUATION_FUNCTIONS_NAMES = [
-    evaluate_basic.__name__,
-    evaluate_version_1.__name__,
-    evaluate_version_2.__name__,
-    evaluate_version_3.__name__
-]
-
-
-def run_ai_tuple(tuple: Tuple[EVALUATION_FUNCTION, int, Player]):
-    eval, depth, player = tuple
-    if player == Player.WHITE:
-        result = Game.ai_contra_ai(
-            eval, evaluate_basic,
-            minimax_a_b_recurr, minimax_a_b_recurr,
-            depth, 3
-        )
-    else:
-        result = Game.ai_contra_ai(
-            evaluate_basic, eval,
-            minimax_a_b_recurr, minimax_a_b_recurr,
-            3, depth
-        )
-    line = f'{player},{eval.__name__},{depth},{result}\n'
-    print(line)
-    return line
-
-
-def run_ai(eval: EVALUATION_FUNCTION, depth: int, player: Player):
-    if player == Player.WHITE:
-        return Game.ai_contra_ai(
-            eval, evaluate_basic,
-            minimax_a_b_recurr, minimax_a_b_recurr,
-            depth, 3
-        )
-    return Game.ai_contra_ai(
-        evaluate_basic, eval,
-        minimax_a_b_recurr, minimax_a_b_recurr,
-        3, depth
-    )
-
-
-def test_ai() -> None:
-    with multiprocessing.pool.Pool() as pool:
-        results = pool.map(
-            run_ai_tuple,
-            product(
-                EVALUATION_FUNCTIONS,
-                DEPTHS,
-                PLAYER
-            )
-        )
-    with open('03-minimax/result/score.csv', 'w') as handle:
-        handle.writelines(results)
-
-
-def format_list(player: List[List[List[int]]]) -> None:
-    line = 'evaluation \\ depth|'
-    line2 = '-|'
-    for d in DEPTHS:
-        line += f'{d}|'
-        line2 += '-|'
-    print(line[:-1])
-    print(line2[:-1])
-
-    values = ['win', 'draw', 'lose']
-
-    for i, row in enumerate(player):
-        line = EVALUATION_FUNCTIONS_NAMES[i] + '|'
-        for x in row:
-            for val, res in zip(x, values):
-                if val == 1:
-                    line += f'{res}|'
-        print(line[:-1])
-    print()
-
-
-def format_result() -> None:
-    player_1 = [[[0 for _ in range(3)] for _ in DEPTHS]
-                for _ in EVALUATION_FUNCTIONS]
-    player_2 = [[[0 for _ in range(3)] for _ in DEPTHS]
-                for _ in EVALUATION_FUNCTIONS]
-    with open('03-minimax/result/score.csv', 'r') as handle:
-        for line in handle.readlines():
-            line = line.rstrip()
-            line = line.split(',')
-            player = line[0]
-            eval = line[1]
-            depth = int(line[2])
-            result = line[3]
-            if player == 'Player.WHITE':
-                if result == 'Player.WHITE':
-                    player_1[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][0] += 1
-                elif result == 'None':
-                    player_1[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][1] += 1
-                else:
-                    player_1[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][2] += 1
-            else:
-                if result == 'Player.BLUE':
-                    player_2[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][0] += 1
-                elif result == 'None':
-                    player_2[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][1] += 1
-                else:
-                    player_2[EVALUATION_FUNCTIONS_NAMES.index(
-                        eval)][DEPTHS.index(int(depth))][2] += 1
-    format_list(player_1)
-    format_list(player_2)
-
-
 def main() -> None:
-    # Game.player_contra_ai(evaluate_basic, minimax_full)
+    Game.player_contra_ai(evaluate_basic, minimax_full)
     # Game.ai_contra_ai_with_display(evaluate_basic, evaluate_version_1,
     #                                minimax_a_b_recurr, minimax_full, 5, 1)
-    # print(Game.ai_contra_ai(evaluate_basic, evaluate_basic,
-    #                         minimax_a_b_recurr, minimax_full, 5, 5))
-    test_ai()
-    # format_result()
+    print(ai_function(Board.populate_with_pawns(),
+          5, evaluate_basic, minimax_a_b_recurr))
+
+    print(ai_function(Board.populate_with_pawns(),
+          5, evaluate_basic, minimax_a_b_recurr_different_algorithm))
 
 
 if __name__ == '__main__':
