@@ -1,5 +1,6 @@
 from comparison import DEPTHS, EVALUATION_FUNCTIONS, EVALUATION_FUNCTIONS_NAMES
-from typing import List
+from typing import List, Union
+from itertools import product
 
 
 def format_list(player: List[List[List[int]]], text: bool = True) -> None:
@@ -97,9 +98,34 @@ def format_full_result() -> None:
     format_list(player_2, False)
 
 
+def check_missing_full():
+    not_used: List[List[Union[str, int]]] = []
+    with open('03-minimax/result/full_score.csv', 'r') as handle:
+        lines = handle.readlines()
+        for eval1, eval2, depth1, depth2 in product(
+            EVALUATION_FUNCTIONS_NAMES,
+            EVALUATION_FUNCTIONS_NAMES,
+            DEPTHS,
+            DEPTHS
+        ):
+            stripped: List[List[str]] = []
+            for line in lines:
+                stripped.append((line.split(',')[:-1]))
+            there_is = False
+
+            for s in stripped:
+                if s[0] == eval1 and s[1] == eval2 and s[2] == str(depth1) and s[3] == str(depth2):
+                    there_is = True
+                    break
+            if not there_is:
+                not_used.append([eval1, eval2, depth1, depth2])
+    print(not_used)
+
+
 def main() -> None:
-    format_result()
+    # format_result()
     format_full_result()
+    # check_missing_full()
 
 
 if __name__ == '__main__':

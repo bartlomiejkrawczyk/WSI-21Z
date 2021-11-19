@@ -9,8 +9,7 @@ from minimax import (
     evaluate_version_1,
     evaluate_version_2,
     evaluate_version_3,
-    minimax_a_b_recurr,
-    # minimax_full
+    minimax_a_b
 )
 
 
@@ -43,13 +42,13 @@ def run_ai(tuple: Tuple[EVALUATION_FUNCTION, int, Player]):
     if player == Player.WHITE:
         result = Game.ai_contra_ai(
             eval, evaluate_basic,
-            minimax_a_b_recurr, minimax_a_b_recurr,
+            minimax_a_b, minimax_a_b,
             depth, 3
         )
     else:
         result = Game.ai_contra_ai(
             evaluate_basic, eval,
-            minimax_a_b_recurr, minimax_a_b_recurr,
+            minimax_a_b, minimax_a_b,
             3, depth
         )
     line = f'{player},{eval.__name__},{depth},{result}\n'
@@ -75,10 +74,10 @@ def run_ai_full(tuple: Tuple[EVALUATION_FUNCTION, EVALUATION_FUNCTION, int, int,
     eval1, eval2, depth1, depth2 = tuple
     result = Game.ai_contra_ai(
         eval1, eval2,
-        minimax_a_b_recurr, minimax_a_b_recurr,
+        minimax_a_b, minimax_a_b,
         depth1, depth2
     )
-    line = f'{eval1.__name__},{eval1.__name__},{depth1},{depth2},{result}\n'
+    line = f'{eval1.__name__},{eval2.__name__},{depth1},{depth2},{result}\n'
     print(line)
     return line
 

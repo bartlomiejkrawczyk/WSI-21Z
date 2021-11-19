@@ -1,4 +1,4 @@
-from checkers import Board, Game, Player, EVALUATION_FUNCTION, ai_function
+from checkers import Board, Game, Player, EVALUATION_FUNCTION
 from math import inf
 
 
@@ -129,47 +129,7 @@ def minimax_full(
         return min(evaluation)
 
 
-def minimax_a_b_recurr_different_algorithm(
-        board: Board,
-        depth: int,
-        evaluation_function: EVALUATION_FUNCTION,
-        alpha: float = -inf,
-        beta: float = inf) -> float:
-
-    moves = board.all_possible_moves()
-
-    if len(moves) == 0 or depth == 0:
-        return evaluation_function(board)
-
-    if board.player == Player.BLUE:
-        max_eval = -inf
-        for move in moves:
-            new_board = board.copy_and_perform_move(move)
-            eval = minimax_a_b_recurr(new_board,
-                                      depth - 1,
-                                      evaluation_function,
-                                      alpha, beta)
-            max_eval = max(max_eval, eval)
-            alpha = max(alpha, eval)
-            if alpha >= beta:
-                break
-        return max_eval
-    else:
-        min_eval = inf
-        for move in moves:
-            new_board = board.copy_and_perform_move(move)
-            eval = minimax_a_b_recurr(new_board,
-                                      depth - 1,
-                                      evaluation_function,
-                                      alpha, beta)
-            min_eval = min(min_eval, eval)
-            beta = min(beta, eval)
-            if alpha >= beta:
-                break
-        return min_eval
-
-
-def minimax_a_b_recurr(
+def minimax_a_b(
         board: Board,
         depth: int,
         evaluation_function: EVALUATION_FUNCTION,
@@ -186,10 +146,10 @@ def minimax_a_b_recurr(
             new_board = board.copy_and_perform_move(move)
             alpha = max(
                 alpha,
-                minimax_a_b_recurr(new_board,
-                                   depth - 1,
-                                   evaluation_function,
-                                   alpha, beta)
+                minimax_a_b(new_board,
+                            depth - 1,
+                            evaluation_function,
+                            alpha, beta)
             )
             if alpha >= beta:
                 return beta
@@ -199,10 +159,10 @@ def minimax_a_b_recurr(
             new_board = board.copy_and_perform_move(move)
             beta = min(
                 beta,
-                minimax_a_b_recurr(new_board,
-                                   depth - 1,
-                                   evaluation_function,
-                                   alpha, beta)
+                minimax_a_b(new_board,
+                            depth - 1,
+                            evaluation_function,
+                            alpha, beta)
             )
             if alpha >= beta:
                 return alpha
@@ -210,14 +170,9 @@ def minimax_a_b_recurr(
 
 
 def main() -> None:
-    Game.player_contra_ai(evaluate_basic, minimax_full)
-    # Game.ai_contra_ai_with_display(evaluate_basic, evaluate_version_1,
-    #                                minimax_a_b_recurr, minimax_full, 5, 1)
-    print(ai_function(Board.populate_with_pawns(),
-          5, evaluate_basic, minimax_a_b_recurr))
-
-    print(ai_function(Board.populate_with_pawns(),
-          5, evaluate_basic, minimax_a_b_recurr_different_algorithm))
+    # Game.player_contra_ai(evaluate_basic, minimax_full)
+    Game.ai_contra_ai_with_display(evaluate_version_3, evaluate_version_3,
+                                   minimax_a_b, minimax_a_b, 3, 3)
 
 
 if __name__ == '__main__':

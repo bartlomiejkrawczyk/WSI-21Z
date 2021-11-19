@@ -2,7 +2,6 @@ import pygame
 from typing import List, Tuple, Optional, NamedTuple, Iterable, Union, Callable
 from enum import Enum
 from itertools import product, chain
-# from minimax import FPS, MINIMAX_DEPTH, MAX_ITERATIONS, BOARD_SIZE, PAWN_ROW_COUNT
 
 # Types
 
@@ -13,7 +12,7 @@ Color = Tuple[int, int, int]
 FPS = 5
 
 MINIMAX_DEPTH = 5
-MAX_ITERATIONS = 1000
+MAX_ITERATIONS = 200
 
 
 BOARD_SIZE = 8
@@ -469,7 +468,7 @@ class Game:
                 game.board.perform_move(move)
             else:
                 break
-
+        print(MAX_ITERATIONS - game.board.iterations)
         if game.board.iterations == 0:
             return None
         return game.board.player.opponent()
