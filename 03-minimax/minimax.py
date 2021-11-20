@@ -2,6 +2,33 @@ from checkers import Board, Game, Player, EVALUATION_FUNCTION
 from math import inf
 
 
+def evaluate_default(board: Board) -> float:
+    evaluation: float = 0
+    pawns = board.get_pawns()
+    blue = 0
+    white = 0
+    for pawn in pawns:
+        if pawn.player == Player.BLUE:
+            blue += 1
+            if pawn.king:
+                evaluation += 4
+            else:
+                evaluation += 1
+        else:
+            white += 1
+            if pawn.king:
+                evaluation -= 4
+            else:
+                evaluation -= 1
+
+    if blue == 0:
+        return -inf
+    elif white == 0:
+        return inf
+
+    return evaluation
+
+
 def evaluate_basic(board: Board) -> float:
     evaluation: float = 0
     pawns = board.get_pawns()
@@ -171,8 +198,10 @@ def minimax_a_b(
 
 def main() -> None:
     # Game.player_contra_ai(evaluate_basic, minimax_full)
-    Game.ai_contra_ai_with_display(evaluate_version_3, evaluate_version_3,
-                                   minimax_a_b, minimax_a_b, 3, 3)
+    Game.ai_contra_ai_with_display(evaluate_basic, evaluate_basic,
+                                   minimax_a_b, minimax_full, 4, 1)
+    # Game.ai_contra_ai(evaluate_default, evaluate_default,
+    #                   minimax_a_b, minimax_a_b, 1, 4)
 
 
 if __name__ == '__main__':

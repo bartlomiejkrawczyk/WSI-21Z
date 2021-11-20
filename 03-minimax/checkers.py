@@ -2,6 +2,7 @@ import pygame
 from typing import List, Tuple, Optional, NamedTuple, Iterable, Union, Callable
 from enum import Enum
 from itertools import product, chain
+# from copy import deepcopy
 
 # Types
 
@@ -9,7 +10,7 @@ Color = Tuple[int, int, int]
 
 # Game Constants
 
-FPS = 5
+FPS = 20
 
 MINIMAX_DEPTH = 5
 MAX_ITERATIONS = 200
@@ -163,16 +164,25 @@ def is_field_black(point: Tuple[int, int]) -> bool:
 
 
 class Board:
-    def __init__(self, size: int = BOARD_SIZE, max_iterations: int = MAX_ITERATIONS) -> None:
-        self.player = Player.WHITE
-        self.size = size
-        self.board: List[List[Entity]] = [
-            [Field(x, y) for x in range(size)] for y in range(size)
-        ]
-        self._marked: Optional[Pawn] = None
-        self.iterations = max_iterations
-        self.blue = 0
-        self.white = 0
+    def __init__(self, size: int = BOARD_SIZE, max_iterations: int = MAX_ITERATIONS, _board: Optional['Board'] = None) -> None:
+        if not _board:
+            self.player = Player.WHITE
+            self.size = size
+            self.board: List[List[Entity]] = [
+                [Field(x, y) for x in range(size)] for y in range(size)
+            ]
+            self._marked: Optional[Pawn] = None
+            self.iterations = max_iterations
+            self.blue = 0
+            self.white = 0
+        else:
+            self.player = _board.player
+            self.size = _board.size
+            self.board = [row.copy() for row in _board.board]
+            self._marked = _board._marked
+            self.iterations = _board.iterations
+            self.blue = _board.blue
+            self.white = _board.white
 
     def copy(self) -> 'Board':
         board = Board(self.size)
@@ -259,7 +269,8 @@ class Board:
         self.iterations -= 1
 
     def copy_and_perform_move(self, move: Move) -> 'Board':
-        copy = self.copy()
+        # copy = deepcopy(self)
+        copy = Board(self.size, self.iterations, self)
         copy.perform_move(move)
         return copy
 
@@ -348,6 +359,8 @@ def ai_function(
     function = max if board.player == Player.BLUE else min
     moves = board.all_possible_moves()
 
+    # shuffle(moves)
+
     best_move = function(
         moves,
         key=lambda move:  minimax(
@@ -355,6 +368,8 @@ def ai_function(
             depth - 1, evaluation_function
         )
     )
+    # print([minimax(board.copy_and_perform_move(move),
+    #                depth - 1, evaluation_function) for move in moves])
     return best_move
 
 
@@ -427,7 +442,7 @@ class Game:
             clock.tick(FPS)
 
             if not game.board.should_end():
-                if game.board.player == Player.BLUE:
+                if game.board.player == Player.WHITE:
                     move = ai_function(game.board, depth_1,
                                        evaluation_funciton_1, minimax_1)
                 else:
@@ -459,7 +474,7 @@ class Game:
 
         while True:
             if not game.board.should_end():
-                if game.board.player == Player.BLUE:
+                if game.board.player == Player.WHITE:
                     move = ai_function(game.board, depth_1,
                                        evaluation_funciton_1, minimax_1)
                 else:
