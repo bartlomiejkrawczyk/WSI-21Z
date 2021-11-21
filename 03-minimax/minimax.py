@@ -7,33 +7,6 @@ def evaluate_random(board: Board) -> float:
     return randint(-100, 100)
 
 
-def evaluate_default(board: Board) -> float:
-    evaluation: float = 0
-    pawns = board.get_pawns()
-    blue = 0
-    white = 0
-    for pawn in pawns:
-        if pawn.player == Player.BLUE:
-            blue += 1
-            if pawn.king:
-                evaluation += 4
-            else:
-                evaluation += 1
-        else:
-            white += 1
-            if pawn.king:
-                evaluation -= 4
-            else:
-                evaluation -= 1
-
-    if blue == 0:
-        return -inf
-    elif white == 0:
-        return inf
-
-    return evaluation
-
-
 def evaluate_basic(board: Board) -> float:
     evaluation: float = 0
     pawns = board.get_pawns()
@@ -92,8 +65,13 @@ def evaluate_version_1(board: Board) -> float:
             else:
                 evaluation -= 1
 
-    evaluation -= (b_max_x - b_min_x) * (b_max_y - b_min_y)
-    evaluation += (w_max_x - w_min_x) * (w_max_y - w_min_y)
+    if board.blue == 0:
+        return -inf
+    elif board.white == 0:
+        return inf
+
+    evaluation -= 2 * ((b_max_x - b_min_x) * (b_max_y - b_min_y)) / board.blue
+    evaluation += 2 * ((w_max_x - w_min_x) * (w_max_y - w_min_y)) / board.white
 
     return evaluation
 
@@ -137,7 +115,7 @@ def evaluate_version_3(board: Board) -> float:
             if pawn.king:
                 evaluation -= 10
             else:
-                evaluation -= 5 - (board.size - pawn.y)
+                evaluation -= 5 + (board.size - pawn.y)
 
     return evaluation
 
@@ -149,7 +127,12 @@ def minimax_full(
 
     moves = board.all_possible_moves()
 
-    if len(moves) == 0 or depth == 0:
+    if len(moves) == 0:
+        if board.player == Player.BLUE:
+            return -inf
+        else:
+            return inf
+    elif depth == 0:
         return evaluation_function(board)
 
     evaluation = [minimax_full(board.copy_and_perform_move(
@@ -170,7 +153,12 @@ def minimax_a_b(
 
     moves = board.all_possible_moves()
 
-    if len(moves) == 0 or depth == 0:
+    if len(moves) == 0:
+        if board.player == Player.BLUE:
+            return -inf
+        else:
+            return inf
+    elif depth == 0:
         return evaluation_function(board)
 
     if board.player == Player.BLUE:
@@ -203,8 +191,8 @@ def minimax_a_b(
 
 def main() -> None:
     # Game.player_contra_ai(evaluate_default, minimax_a_b)
-    Game.ai_contra_ai_with_display(evaluate_default, evaluate_basic,
-                                   minimax_a_b, minimax_full, 3, 5)
+    Game.ai_contra_ai_with_display(evaluate_basic, evaluate_basic,
+                                   minimax_a_b, minimax_full, 2, 2)
     # Game.ai_contra_ai(evaluate_default, evaluate_default,
     #                   minimax_a_b, minimax_a_b, 1, 4)
 

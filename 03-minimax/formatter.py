@@ -122,10 +122,57 @@ def check_missing_full():
     print(not_used)
 
 
+def format_game_result(game_result: List[List[List[int]]], text: bool = True) -> None:
+    line = 'blue \\ white|'
+    line2 = '-|'
+    for d in DEPTHS:
+        line += f'{d}|'
+        line2 += '-|'
+    print(line[:-1])
+    print(line2[:-1])
+
+    values = ['white', 'draw', 'blue']
+
+    for i, row in enumerate(game_result):
+        line = str(DEPTHS[i]) + '|'
+        for x in row:
+            if text:
+                for val, res in zip(x, values):
+                    if val == 1:
+                        line += f'{res}|'
+            else:
+                line += f'{x}|'
+        print(line[:-1])
+    print()
+
+
+def format_result_basic() -> None:
+    game_result = [[[0 for _ in range(3)] for _ in DEPTHS]
+                   for _ in EVALUATION_FUNCTIONS]
+    with open('03-minimax/result/basic_score.csv', 'r') as handle:
+        for line in handle.readlines():
+            line = line.rstrip()
+            line = line.split(',')
+            depth1 = int(line[0])
+            depth2 = int(line[1])
+            result = line[2]
+            if result == 'Player.WHITE':
+                game_result[DEPTHS.index(int(depth2))
+                            ][DEPTHS.index(int(depth1))][0] += 1
+            elif result == 'None':
+                game_result[DEPTHS.index(int(depth2))
+                            ][DEPTHS.index(int(depth1))][1] += 1
+            else:
+                game_result[DEPTHS.index(int(depth2))
+                            ][DEPTHS.index(int(depth1))][2] += 1
+    format_game_result(game_result)
+
+
 def main() -> None:
     # format_result()
     format_full_result()
     # check_missing_full()
+    # format_result_basic()
 
 
 if __name__ == '__main__':

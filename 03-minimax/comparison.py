@@ -6,7 +6,6 @@ import multiprocessing.pool
 
 from minimax import (
     evaluate_random,
-    evaluate_default,
     evaluate_basic,
     evaluate_version_1,
     evaluate_version_2,
@@ -26,7 +25,6 @@ DEPTHS = [
 
 EVALUATION_FUNCTIONS = [
     evaluate_random,
-    evaluate_default,
     evaluate_basic,
     evaluate_version_1,
     evaluate_version_2,
@@ -35,7 +33,6 @@ EVALUATION_FUNCTIONS = [
 
 EVALUATION_FUNCTIONS_NAMES = [
     evaluate_random.__name__,
-    evaluate_default.__name__,
     evaluate_basic.__name__,
     evaluate_version_1.__name__,
     evaluate_version_2.__name__,
@@ -103,9 +100,35 @@ def test_ai_full() -> None:
         handle.writelines(results)
 
 
+def run_ai_basic(tuple: Tuple[int, int]):
+    depth1, depth2 = tuple
+    result = Game.ai_contra_ai(
+        evaluate_basic, evaluate_basic,
+        minimax_a_b, minimax_a_b,
+        depth1, depth2
+    )
+    line = f'{depth1},{depth2},{result}\n'
+    print(line)
+    return line
+
+
+def test_ai_basic() -> None:
+    with multiprocessing.pool.Pool() as pool:
+        results = pool.map(
+            run_ai_basic,
+            product(
+                DEPTHS,
+                DEPTHS
+            )
+        )
+    with open('03-minimax/result/basic_score.csv', 'w') as handle:
+        handle.writelines(results)
+
+
 def main():
     # test_ai()
     test_ai_full()
+    # test_ai_basic()
 
 
 if __name__ == '__main__':
