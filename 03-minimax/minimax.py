@@ -202,9 +202,9 @@ def minimax_a_b(
 
 
 def main() -> None:
-    Game.player_contra_ai(evaluate_default, minimax_a_b)
-    # Game.ai_contra_ai_with_display(evaluate_random, evaluate_basic,
-    #                                minimax_a_b, minimax_full, 4, 1)
+    # Game.player_contra_ai(evaluate_default, minimax_a_b)
+    Game.ai_contra_ai_with_display(evaluate_default, evaluate_basic,
+                                   minimax_a_b, minimax_full, 3, 5)
     # Game.ai_contra_ai(evaluate_default, evaluate_default,
     #                   minimax_a_b, minimax_a_b, 1, 4)
 

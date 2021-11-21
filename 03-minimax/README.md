@@ -1,3 +1,20 @@
+# Wprowadzenie do sztucznej inteligencji - ćwiczenie 3
+
+## Student
+
+Imię: Bartłomiej
+
+Nazwisko: Krawczyk
+
+Numer indeksu: 310774
+
+## Pytania
+
+### Czy gracz sterowany przez AI zachowuje się rozsądnie z ludzkiego punktu widzenia? Jeśli nie to co jest nie tak?
+
+- gracz sterowany przez AI nie zawsze zachowuje się tak jak człowiek
+- taki gracz stara się uzyskać jak najlepszą ewaluację i do tego dąży:
+    - np. w przypadku ewaluacji podstawowej, AI woli zdobyć damkę niż zbić kilka pionków gracza
 
 
 ### Gra na planszy 8x8 z 3 rzędami pionów na starcie vs przeciwnik z ustawioną funkcją ewaluującą podstawową i głębokością 3.
@@ -25,6 +42,28 @@ evaluate_version_2 | lose | lose | draw | draw | draw
 evaluate_version_3 | lose | lose | lose | lose | draw
 
 ### Gra na planszy 8x8 z 3 rzędami pionów na starcie, każdy z każdym.
+
+Gracz biały:
+
+evaluation \ depth | 1           | 2           | 3           | 4           | 5
+-------------------|-------------|-------------|-------------|-------------|------------
+evaluate_random    | [2, 7, 21]  | [8, 5, 17]  | [1, 14, 15] | [8, 2, 20]  | [4, 16, 10]
+evaluate_default   | [9, 5, 16]  | [13, 15, 2] | [22, 6, 2]  | [26, 4, 0]  | [15, 15, 0]
+evaluate_basic     | [9, 5, 16]  | [14, 14, 2] | [22, 6, 2]  | [25, 5, 0]  | [14, 16, 0]
+evaluate_version_1 | [6, 6, 18]  | [9, 10, 11] | [6, 8, 16]  | [6, 16, 8]  | [9, 16, 5]
+evaluate_version_2 | [11, 5, 14] | [12, 17, 1] | [9, 21, 0]  | [18, 4, 8]  | [18, 8, 4]
+evaluate_version_3 | [8, 6, 16]  | [13, 15, 2] | [15, 15, 0] | [17, 13, 0] | [10, 20, 0]
+
+Gracz niebieski:
+
+evaluation \ depth | 1            | 2           | 3           | 4           | 5
+-------------------|--------------|-------------|-------------|-------------|------------
+evaluate_random    | [1, 6, 23]   | [2, 4, 24]  | [1, 8, 21]  | [5, 1, 24]  | [3, 10, 17]
+evaluate_default   | [9, 11, 10]  | [10, 14, 6] | [8, 19, 3]  | [13, 12, 5] | [14, 12, 4]
+evaluate_basic     | [10, 10, 10] | [11, 13, 6] | [8, 19, 3]  | [15, 11, 4] | [13, 13, 4]
+evaluate_version_1 | [2, 5, 23]   | [2, 6, 22]  | [3, 15, 12] | [0, 13, 17] | [0, 11, 19]
+evaluate_version_2 | [10, 8, 12]  | [7, 12, 11] | [12, 10, 8] | [13, 13, 4] | [12, 16, 2]
+evaluate_version_3 | [9, 8, 13]   | [10, 7, 13] | [9, 3, 18]  | [7, 13, 10] | [7, 12, 11]
 
 
 ### Gra na planszy 6x6 z 2 rzędami pionów na starcie, każdy z każdym.
