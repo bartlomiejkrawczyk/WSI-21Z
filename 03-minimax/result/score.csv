@@ -1,3 +1,13 @@
+Player.WHITE,evaluate_random,1,Player.BLUE
+Player.BLUE,evaluate_random,1,Player.WHITE
+Player.WHITE,evaluate_random,2,Player.BLUE
+Player.BLUE,evaluate_random,2,Player.WHITE
+Player.WHITE,evaluate_random,3,Player.BLUE
+Player.BLUE,evaluate_random,3,Player.WHITE
+Player.WHITE,evaluate_random,4,None
+Player.BLUE,evaluate_random,4,Player.WHITE
+Player.WHITE,evaluate_random,5,None
+Player.BLUE,evaluate_random,5,Player.WHITE
 Player.WHITE,evaluate_default,1,None
 Player.BLUE,evaluate_default,1,Player.WHITE
 Player.WHITE,evaluate_default,2,None

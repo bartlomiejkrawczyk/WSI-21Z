@@ -5,6 +5,7 @@ from typing import Tuple
 import multiprocessing.pool
 
 from minimax import (
+    evaluate_random,
     evaluate_default,
     evaluate_basic,
     evaluate_version_1,
@@ -24,6 +25,7 @@ DEPTHS = [
 ]
 
 EVALUATION_FUNCTIONS = [
+    evaluate_random,
     evaluate_default,
     evaluate_basic,
     evaluate_version_1,
@@ -32,6 +34,7 @@ EVALUATION_FUNCTIONS = [
 ]
 
 EVALUATION_FUNCTIONS_NAMES = [
+    evaluate_random.__name__,
     evaluate_default.__name__,
     evaluate_basic.__name__,
     evaluate_version_1.__name__,

@@ -1,5 +1,10 @@
 from checkers import Board, Game, Player, EVALUATION_FUNCTION
 from math import inf
+from random import randint
+
+
+def evaluate_random(board: Board) -> float:
+    return randint(-100, 100)
 
 
 def evaluate_default(board: Board) -> float:
@@ -197,9 +202,9 @@ def minimax_a_b(
 
 
 def main() -> None:
-    # Game.player_contra_ai(evaluate_basic, minimax_full)
-    Game.ai_contra_ai_with_display(evaluate_basic, evaluate_basic,
-                                   minimax_a_b, minimax_full, 4, 1)
+    Game.player_contra_ai(evaluate_default, minimax_a_b)
+    # Game.ai_contra_ai_with_display(evaluate_random, evaluate_basic,
+    #                                minimax_a_b, minimax_full, 4, 1)
     # Game.ai_contra_ai(evaluate_default, evaluate_default,
     #                   minimax_a_b, minimax_a_b, 1, 4)
 
