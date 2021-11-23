@@ -38,10 +38,10 @@ Niech komputer gra z komputerem (bez wizualizacji), zmieniamy parametry jednego 
     - taki algorytm jeśli ma możliwość zbić pionek gracza, często pozostawia to potencjalne zbicie na później, ponieważ nadal będzie mogło uzyskać taką samą lub lepszą ewaluację (chyba, że ustawimy głębokość na 1 wtedy ai przewiduje jedynie ewaluację w kolejnym swoim ruchu)
 - ai vs ai bardzo często kończy remisem, ponieważ wpadają one w cykle i nie mogą zakończyć rozgrywki
     - sytuacja ta występuje gdy więcej niż jeden ruch ma tę samą maksymalną wartość ewaluacji i w tym przypadku wybierana jest wartość pierwsza z listy ruchów o takiej wartości ewaluacji - rozgrywka kończy się wtedy remisem pomimo często znaczącej przewagi jednej ze stron
-- jednak, jak odpalam grę w wersji ja przeciwko AI, nie udaje mi się wygrać
+- jednak, jak odpalam grę w wersji ja przeciwko AI, ciężko mi jest wygrać, chyba, że przyjmę taktykę zdobądź jedną damkę, i pozostaw 1 rząd pionów nie ruszony - zablokuj możliwość AI zdobycia damki i przez to ma jedynie ograniczoną liczbę ruchów - i przez to przegrywa
 
 
-### Porównianie głębokości na planczy 8x8 z 3 rzędami pionów
+### Porównianie głębokości na planszy 8x8 z 3 rzędami pionów
 
 blue \ white | 1    | 2     | 3     | 4     | 5
 -------------|------|-------|-------|-------|------
