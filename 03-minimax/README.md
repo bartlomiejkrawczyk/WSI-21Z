@@ -35,8 +35,10 @@ Niech komputer gra z komputerem (bez wizualizacji), zmieniamy parametry jednego 
 - gracz sterowany przez AI nie zawsze zachowuje się rozsądnie
 - taki gracz stara się uzyskać jak najlepszą ewaluację i do tego dąży:
     - np. w przypadku ewaluacji podstawowej, AI woli zdobyć damkę niż zbić kilka pionków gracza
+    - taki algorytm jeśli ma możliwość zbić pionek gracza, często pozostawia to potencjalne zbicie na później, ponieważ nadal będzie mogło uzyskać taką samą lub lepszą ewaluację (chyba, że ustawimy głębokość na 1 wtedy ai przewiduje jedynie ewaluację w kolejnym swoim ruchu)
+- ai vs ai bardzo często kończy remisem, ponieważ wpadają one w cykle i nie mogą zakończyć rozgrywki
+    - sytuacja ta występuje gdy więcej niż jeden ruch ma tę samą maksymalną wartość ewaluacji i w tym przypadku wybierana jest wartość pierwsza z listy ruchów o takiej wartości ewaluacji - rozgrywka kończy się wtedy remisem pomimo często znaczącej przewagi jednej ze stron
 - jednak, jak odpalam grę w wersji ja przeciwko AI, nie udaje mi się wygrać
-- gdy funkcja ewaluacji dla każdego możliwego ruchu / kilku możliwych ruchów zwraca tę samą wartość, to AI wybiera zawsze pierwszą z listy i przez to często wpada w cykle i przez to kończy remisem
 
 
 ### Porównianie głębokości na planczy 8x8 z 3 rzędami pionów
@@ -48,6 +50,9 @@ blue \ white | 1    | 2     | 3     | 4     | 5
 3            | draw | draw  | draw  | white | draw
 4            | blue | draw  | blue  | draw  | white
 5            | blue | draw  | white | white | draw
+
+- z porównywania głębokości wynika, że im większa jest głębokość tym większa szansa na wygranie danego ai
+- można też zauważyć, że białe pionki są w nieco lepszej sytuacji
 
 ### Gra na planszy 8x8 z 3 rzędami pionów na starcie vs przeciwnik z ustawioną funkcją ewaluującą podstawową i głębokością 3.
 
