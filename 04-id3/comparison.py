@@ -1,4 +1,4 @@
-from random import sample
+from random import shuffle
 from reader import read_file
 from id3 import run_id3
 from statistics import mean, stdev
@@ -11,8 +11,10 @@ import multiprocessing.pool
 def test_tree(args: Tuple[str, int]) -> float:
     file, class_column = args
     data = read_file(file, class_column)
-    training_data = sample(data, len(data) // 5 * 3)
-    testing_data = [val for val in data if val not in training_data]
+    shuffle(data)
+    training_data_size = len(data) // 5 * 3
+    training_data = data[: training_data_size]
+    testing_data = data[training_data_size:]
 
     tree = run_id3(training_data)
 
