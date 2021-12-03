@@ -26,3 +26,9 @@ Poniżej kilka wskazówek ogólnych do tego ćwiczenia:
 - Tak na prawdę to nie musimy rozumieć dziedziny problemu - na wejściu mamy napisy, na wyjściu napisy, nie ważne czy klasyfikujemy sekwencje DNA, grzyby, czy samochody.
 - Nazwa pliku ze zbiorem danych jest parametrem algorytmu klasyfikacji, kod klasyfikatora powinien być w stanie obsłużyć inny zbiór danych o tym samym rozkładzie kolumn (czyli nie należy wpisywać wartości atrybutów „na sztywno” w kodzie).
 - W repozytorium ze zbiorami danych zwykle w plikach „.names” jest napisane, który atrybut to klasa (czyli wartości której kolumny mamy się nauczyć przewidywać).
+
+
+name             | min                | mean               | max                | stdev
+-----------------|--------------------|--------------------|--------------------|--------------------
+Agaricus Lepiota | 0.9726322263222632 | 0.9827675276752768 | 1.0                | 0.00710340977813216
+Breast Cancer    | 0.6090909090909091 | 0.6900912447812497 | 0.8090909090909091 | 0.04479529263008845
