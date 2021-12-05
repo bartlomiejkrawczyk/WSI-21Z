@@ -5,14 +5,14 @@ from math import log
 
 
 class TrainingData(NamedTuple):
-    class_: str
+    expected_class: str
     values: List[str]
 
 
 class Leaf(NamedTuple):
     predicted_class: str
 
-    def get_class(self, sample: List[str]) -> str:
+    def identify(self, sample: List[str]) -> str:
         return self.predicted_class
 
 
@@ -20,12 +20,12 @@ class Node(NamedTuple):
     attribute: int
     children: Dict[str, Union['Node', Leaf]]
 
-    def get_class(self, sample: List[str]) -> str:
+    def identify(self, sample: List[str]) -> str:
         if sample[self.attribute] in self.children:
-            return self.children[sample[self.attribute]].get_class(sample)
+            return self.children[sample[self.attribute]].identify(sample)
 
         classes: List[str] = [
-            child.get_class(sample)
+            child.identify(sample)
             for child in self.children.values()
         ]
 
@@ -42,13 +42,14 @@ def split_data(attribute: int, data: List[TrainingData]) -> Dict[str, List[Train
 
 
 def entropy(class_counter: "Counter[str]") -> float:
-    return - sum(count * log(count) for count in class_counter.values())
+    total = sum(class_counter.values())
+    return - sum(count / total * log(count / total) for count in class_counter.values())
 
 
 def inf(attribute: int, data: List[TrainingData]) -> float:
     splitted_data = split_data(attribute, data)
     return sum(
-        entropy(Counter(sample.class_ for sample in subset)) *
+        entropy(Counter(sample.expected_class for sample in subset)) *
         len(subset) / len(data)
         for subset in splitted_data.values()
     )
@@ -59,10 +60,10 @@ def inf_gain(attribute: int, data: List[TrainingData], class_counter: "Counter[s
 
 
 def id3(data: List[TrainingData], attributes: List[int]) -> Union[Node, Leaf]:
-    class_counter = Counter(sample.class_ for sample in data)
+    class_counter = Counter(sample.expected_class for sample in data)
 
     if len(class_counter) == 1:
-        return Leaf(data[0].class_)
+        return Leaf(data[0].expected_class)
 
     if len(attributes) == 0:
         return Leaf(class_counter.most_common(1)[0][0])
@@ -88,15 +89,15 @@ def run_id3(data: List[TrainingData]) -> Union[Node, Leaf]:
 
 def main():
     tree = run_id3([
-        TrainingData('A', ['1', '2', '3']),
-        TrainingData('A', ['2', '2', '3']),
-        TrainingData('B', ['1', '1', '3']),
-        TrainingData('C', ['3', '1', '2'])
+        TrainingData('A', ['1', '2', '3', '0']),
+        TrainingData('D', ['1', '1', '3', '0']),
+        TrainingData('B', ['0', '1', '2', '0']),
+        TrainingData('C', ['1', '1', '2', '0'])
     ])
 
     print(tree)
-    print(tree.get_class(['3', '1', '2']))
-    print(tree.get_class(['6', '2', '7']))
+    print(tree.identify(['0', '1', '2', '1']))
+    print(tree.identify(['6', '2', '7', '1']))
 
 
 if __name__ == '__main__':
