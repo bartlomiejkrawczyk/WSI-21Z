@@ -28,7 +28,8 @@ Poniżej kilka wskazówek ogólnych do tego ćwiczenia:
 - W repozytorium ze zbiorami danych zwykle w plikach „.names” jest napisane, który atrybut to klasa (czyli wartości której kolumny mamy się nauczyć przewidywać).
 
 
-name             | min               | mean               | max                | stdev
------------------|-------------------|--------------------|--------------------|---------------------
-Agaricus Lepiota | 1.0               | 1.0                | 1.0                | 0.0
-Breast Cancer    | 0.591304347826087 | 0.6650434782608695 | 0.7391304347826086 | 0.037327211668417966
+name             | min                 | mean                | max                 | stdev
+-----------------|---------------------|---------------------|---------------------|---------------------
+Agaricus Lepiota | 100.0 %             | 100.0 %             | 100.0 %             | 0.0 %
+Breast Cancer    | 55.65217391304348 % | 64.38260869565218 % | 71.30434782608695 % | 4.173913043478261 %
+Car              | 88.8728323699422 %  | 91.58381502890174 % | 93.64161849710982 % | 1.1749422881242075 %

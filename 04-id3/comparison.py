@@ -97,7 +97,7 @@ class Result:
                                    randint(0, 10000000) for _ in range(25)])
             )
 
-            self.percentages = [get_correct(result[0])
+            self.percentages = [get_correct(result[0]) * 100
                                 for result in self.results]
 
     def str_results(self) -> str:
@@ -110,7 +110,7 @@ class Result:
     def __str__(self) -> str:
         result = f'{self.name} |'
         for func in FUNCTIONS:
-            result += f'{func(self.percentages)} |'
+            result += f'{func(self.percentages)} % |'
         result = result[:-1]
 
         return result

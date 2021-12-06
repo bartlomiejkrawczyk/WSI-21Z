@@ -43,14 +43,14 @@ def split_data(attribute: int, data: List[TrainingData]) -> Dict[str, List[Train
 
 def entropy(class_counter: "Counter[str]") -> float:
     total = sum(class_counter.values())
-    return - sum(count / total * log(count / total) for count in class_counter.values())
+    return -sum(count / total * log(count / total) for count in class_counter.values())
 
 
 def inf(attribute: int, data: List[TrainingData]) -> float:
     splitted_data = split_data(attribute, data)
     return sum(
-        entropy(Counter(sample.expected_class for sample in subset)) *
-        len(subset) / len(data)
+        len(subset) / len(data) *
+        entropy(Counter(sample.expected_class for sample in subset))
         for subset in splitted_data.values()
     )
 
@@ -76,6 +76,7 @@ def id3(data: List[TrainingData], attributes: List[int]) -> Union[Node, Leaf]:
             class_counter=class_counter
         )  # type: ignore
     )
+    attributes = attributes.copy()
     attributes.remove(attribute)
 
     splitted_data = split_data(attribute, data)
@@ -89,6 +90,7 @@ def run_id3(data: List[TrainingData]) -> Union[Node, Leaf]:
 
 def main():
     tree = run_id3([
+        TrainingData('A', ['1', '2', '3', '0']),
         TrainingData('A', ['1', '2', '3', '0']),
         TrainingData('D', ['1', '1', '3', '0']),
         TrainingData('B', ['0', '1', '2', '0']),
