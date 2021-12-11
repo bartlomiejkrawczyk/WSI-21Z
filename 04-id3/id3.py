@@ -89,17 +89,24 @@ def run_id3(data: List[TrainingData]) -> Union[Node, Leaf]:
 
 
 def main():
-    tree = run_id3([
-        TrainingData('A', ['1', '2', '3', '0']),
-        TrainingData('A', ['1', '2', '3', '0']),
-        TrainingData('D', ['1', '1', '3', '0']),
-        TrainingData('B', ['0', '1', '2', '0']),
-        TrainingData('C', ['1', '1', '2', '0'])
-    ])
+
+    data = [
+        TrainingData('0', ['A', '1']),
+        TrainingData('1', ['B', '1']),
+        TrainingData('1', ['B', '2']),
+        TrainingData('0', ['B', '2']),
+        TrainingData('1', ['B', '3'])
+    ]
+
+    tree = run_id3(data)
+
+    print(inf_gain(0, data, Counter(sample.expected_class for sample in data)))
 
     print(tree)
-    print(tree.identify(['0', '1', '2', '1']))
-    print(tree.identify(['6', '2', '7', '1']))
+    print(tree.identify(['A', '1']))
+    print(tree.identify(['B', '1']))
+    print(tree.identify(['B', '2']))
+    print(tree.identify(['B', '3']))
 
 
 if __name__ == '__main__':

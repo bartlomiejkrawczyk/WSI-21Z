@@ -27,9 +27,37 @@ Poniżej kilka wskazówek ogólnych do tego ćwiczenia:
 - Nazwa pliku ze zbiorem danych jest parametrem algorytmu klasyfikacji, kod klasyfikatora powinien być w stanie obsłużyć inny zbiór danych o tym samym rozkładzie kolumn (czyli nie należy wpisywać wartości atrybutów „na sztywno” w kodzie).
 - W repozytorium ze zbiorami danych zwykle w plikach „.names” jest napisane, który atrybut to klasa (czyli wartości której kolumny mamy się nauczyć przewidywać).
 
+# Dokładność
+
+Statystyki dokładności drzew wygenerowanych algorytmem ID3 dla 25 różnych zbiorów trenujących + testowych:
 
 name             | min                 | mean                | max                 | stdev
 -----------------|---------------------|---------------------|---------------------|---------------------
 Agaricus Lepiota | 100.0 %             | 100.0 %             | 100.0 %             | 0.0 %
 Breast Cancer    | 55.65217391304348 % | 64.38260869565218 % | 71.30434782608695 % | 4.173913043478261 %
 Car              | 88.8728323699422 %  | 91.58381502890174 % | 93.64161849710982 % | 1.1749422881242075 %
+
+# Macierze Pomyłek
+
+## Zbiór Breast Cancer
+
+Przykładowa macierz pomyłek:
+
+expected / predicted | no-recurrence-events | recurrence-events
+---------------------|----------------------|------------------
+no-recurrence-events | 62                   | 14
+recurrence-events    | 24                   | 15
+
+## Zbiór Mushroom
+
+Przykładowa macierz pomyłek:
+
+expected / predicted | p    | e
+---------------------|------|-----
+p                    | 1562 | 0
+e                    | 0    | 1688
+
+# Wnioski
+
+- Algorytm radzi sobie lepiej dla większych zbiorów - dla zbioru mushroom dokładność wyniosła aż 100 %
+- Dla mniejszych zbiorów algorytm nie radzi sobie tak dobrze i w głównej mierze zależy od dobranych par trenujących
