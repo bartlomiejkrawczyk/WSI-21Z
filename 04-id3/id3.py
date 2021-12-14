@@ -12,7 +12,7 @@ class TrainingData(NamedTuple):
 class Leaf(NamedTuple):
     predicted_class: str
 
-    def identify(self, sample: List[str]) -> str:
+    def identify(self, _sample: List[str]) -> str:
         return self.predicted_class
 
 

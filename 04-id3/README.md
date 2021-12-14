@@ -17,15 +17,10 @@ Numer indeksu: 310774
     - mushroom
 - Sformułować i spisać w kilku zdaniach wnioski.
 
-Poniżej kilka wskazówek ogólnych do tego ćwiczenia:
-- Atrybuty nominalne - każdy atrybut może przyjmować jedną z kilku dozwolonych wartości, zakładamy, że wartość atrybutu to napis, np. "kot", "a", "20-34", ">40".
-- Testy tożsamościowe - jeżeli atrybut testowany w danym węźle ma np. 3 dozwolone wartości, np. a, b, c, to z węzła tego wychodzą 3 krawędzie oznaczone: a, b, c.
-- Na tym ćwiczeniu klasyfikator trenuje się na zbiorze trenującym, a ocenia jego jakość na zbiorze testującym. Należy losowo podzielić zbiór danych na trenujący i testujący w stosunku 3:2.
-- Jeżeli zbiór danych zawiera numery lub identyfikatory wierszy to należy je wyrzucić - nie chcemy uczyć się identyfikatorów wierszy.
-- Brakujące wartości atrybutów traktujemy jako wartość, np. jeżeli symbol ‘?’ oznacza brakującą wartość, a symbole ‘a’, ‘b’ wartości normalne, to z naszego punktu widzenia mamy 3 wartości normalne (fachowo: 3 wartości atrybutu): ‘a’, ‘b’, ‘?’.
-- Tak na prawdę to nie musimy rozumieć dziedziny problemu - na wejściu mamy napisy, na wyjściu napisy, nie ważne czy klasyfikujemy sekwencje DNA, grzyby, czy samochody.
-- Nazwa pliku ze zbiorem danych jest parametrem algorytmu klasyfikacji, kod klasyfikatora powinien być w stanie obsłużyć inny zbiór danych o tym samym rozkładzie kolumn (czyli nie należy wpisywać wartości atrybutów „na sztywno” w kodzie).
-- W repozytorium ze zbiorami danych zwykle w plikach „.names” jest napisane, który atrybut to klasa (czyli wartości której kolumny mamy się nauczyć przewidywać).
+# Założenia
+
+- Atrybuty nominalne - każdy atrybut może przyjmować jedną z kilku dozwolonych wartości
+- Należy losowo podzielić zbiór danych na trenujący i testujący w stosunku 3:2
 
 # Dokładność
 
@@ -36,6 +31,7 @@ name             | min                 | mean                | max              
 Agaricus Lepiota | 100.0 %             | 100.0 %             | 100.0 %             | 0.0 %
 Breast Cancer    | 55.65217391304348 % | 64.38260869565218 % | 71.30434782608695 % | 4.173913043478261 %
 Car              | 88.8728323699422 %  | 91.58381502890174 % | 93.64161849710982 % | 1.1749422881242075 %
+Tic-Tac-Toe      | 78.38541666666666 % | 83.33333333333333 % | 86.97916666666666 % | 2.3158544395753635 %
 
 # Macierze Pomyłek
 
@@ -59,5 +55,7 @@ e                    | 0    | 1688
 
 # Wnioski
 
-- Algorytm radzi sobie lepiej dla większych zbiorów - dla zbioru mushroom dokładność wyniosła aż 100 %
-- Dla mniejszych zbiorów algorytm nie radzi sobie tak dobrze i w głównej mierze zależy od dobranych par trenujących
+- Algorytm radzi sobie lepiej dla większych zbiorów
+    - dla zbioru mushroom (4874 danych trenujących) dokładność wyniosła aż 100 %
+- Dla mniejszych zbiorów algorytm nie radzi sobie, aż tak dobrze
+    - w głównej mierze zależy od ilości dostępnych atrybutów oraz dobranych par trenujących

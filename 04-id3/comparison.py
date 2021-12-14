@@ -131,7 +131,8 @@ def print_divider():
 FILES = {
     'Agaricus Lepiota': ('04-id3/data/agaricus-lepiota.data', 0),
     'Breast Cancer': ('04-id3/data/breast-cancer.data', 0),
-    'Car': ('04-id3/data/car.data', 6)
+    'Car': ('04-id3/data/car.data', 6),
+    'Tic-Tac-Toe': ('04-id3/data/tic-tac-toe.data', 9)
 }
 
 
