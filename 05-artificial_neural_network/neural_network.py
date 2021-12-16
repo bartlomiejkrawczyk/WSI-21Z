@@ -43,12 +43,12 @@ def d_nloss(approximated_y: float, y: float) -> float:
 
 
 class Network:
-    def __init__(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32]):
+    def __init__(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32], hidden_layer_size: int = 9):
         self.x = x
         self.y = y
         # self.approximated_y = 0
 
-        self.HIDDEN_LAYER_SIZE = 9
+        self.hidden_layer_size = hidden_layer_size
         self.LR = 0.003
 
         # TODO:
