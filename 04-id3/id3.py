@@ -99,10 +99,12 @@ def main():
     ]
 
     tree = run_id3(data)
+    print(tree)
+    print()
 
     print(inf_gain(0, data, Counter(sample.expected_class for sample in data)))
+    print()
 
-    print(tree)
     print(tree.identify(['A', '1']))
     print(tree.identify(['B', '1']))
     print(tree.identify(['B', '2']))

@@ -55,7 +55,10 @@ e                    | 0    | 1688
 
 # Wnioski
 
-- Algorytm radzi sobie lepiej dla większych zbiorów
-    - dla zbioru mushroom (4874 danych trenujących) dokładność wyniosła aż 100 %
+- Z wyników wychodzi, że algorytm radzi sobie lepiej dla większych zbiorów
+    - dla zbioru mushroom (4874 danych trenujących) dokładność dla danych testowych wyniosła aż 100 % we wszystkich 25 testach
 - Dla mniejszych zbiorów algorytm nie radzi sobie, aż tak dobrze
-    - w głównej mierze zależy od ilości dostępnych atrybutów oraz dobranych par trenujących
+
+- wyszło mi, że w głównej mierze wynik zależy od:
+    - ilości dostępnych atrybutów
+    - dobranych par trenujących
