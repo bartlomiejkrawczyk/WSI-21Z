@@ -1,94 +1,83 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-
-import matplotlib.pyplot as plt
 import numpy as np
+from numpy import typing as npt
+from plotter import plot_functions
 
-# ToDo tu prosze podac pierwsze cyfry numerow indeksow
-p = [3, 7]
+
+INDEXES = [310774, 310774]
+INDEX_UNITS = [idx % 10 for idx in INDEXES]
+
 
 L_BOUND = -5
 U_BOUND = 5
 
 
-def q(x):
-    return np.sin(x*np.sqrt(p[0]+1))+np.cos(x*np.sqrt(p[1]+1))
+def function_to_approximate(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+    return np.sin(x * np.sqrt(INDEX_UNITS[0] + 1)) + np.cos(x * np.sqrt(INDEX_UNITS[1] + 1))
 
 
-x = np.linspace(L_BOUND, U_BOUND, 100)
-y = q(x)
+X: npt.NDArray[np.float32] = np.linspace(L_BOUND, U_BOUND, 100)  # type: ignore
+Y = function_to_approximate(X)
 
 np.random.seed(1)
 
 
-# f logistyczna jako przykĹad sigmoidalej
-def sigmoid(x):
-    return 1/(1+np.exp(-x))
+# f logistyczna jako przykład sigmoidalej
+def sigmoid(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+    return 1 / (1 + np.exp(-x))
+
 
 # pochodna fun. 'sigmoid'
+def d_sigmoid(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+    s = 1 / (1 + np.exp(-x))
+    return s * (1 - s)
 
-
-def d_sigmoid(x):
-    s = 1/(1+np.exp(-x))
-    return s * (1-s)
 
 #f. straty
+def nloss(approximated_y: float, y: float) -> float:
+    return (approximated_y - y) ** 2
 
-
-def nloss(y_out, y):
-    return (y_out - y) ** 2
 
 # pochodna f. straty
+def d_nloss(approximated_y: float, y: float) -> float:
+    return 2 * (approximated_y - y)
 
 
-def d_nloss(y_out, y):
-    return 2*(y_out - y)
-
-
-class DlNet:
-    def __init__(self, x, y):
+class Network:
+    def __init__(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32]):
         self.x = x
         self.y = y
-        self.y_out = 0
+        # self.approximated_y = 0
 
-        self.HIDDEN_L_SIZE = 9
+        self.HIDDEN_LAYER_SIZE = 9
         self.LR = 0.003
 
-# ToDo
+        # TODO:
 
-    def forward(self, x):
-        pass
-# ToDo
+    def forward(self, x: npt.NDArray[np.float32]):
+        pass  # TODO:
 
-    def predict(self, x):
-        # ToDo
+    def predict(self, x: npt.NDArray[np.float32]):
+        # TODO:
         return
 
-    def backward(self, x, y):
-        # ToDo
+    def backward(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32]):
+        # TODO:
+        pass
 
-    def train(self, x_set, y_set, iters):
-        for i in range(0, iters):
-            # ToDo
-
-
-nn = DlNet(x, y)
-nn.train(x, y, 15000)
-
-yh = []  # ToDo tu umiesciÄ wyniki (y) z sieci
+    def train(self, x_set: npt.NDArray[np.float32], y_set: npt.NDArray[np.float32], iterations: int):
+        for _ in range(iterations):
+            # TODO:
+            pass
 
 
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-ax.spines['left'].set_position('center')
-ax.spines['bottom'].set_position('zero')
-ax.spines['right'].set_color('none')
-ax.spines['top'].set_color('none')
-ax.xaxis.set_ticks_position('bottom')
-ax.yaxis.set_ticks_position('left')
+def main():
+    nn = Network(X, Y)
+    nn.train(X, Y, 15000)
 
-plt.plot(x, y, 'r')
-plt.plot(x, yh, 'b')
+    approximated_y = Y / 2  # TODO: tu umiescić wyniki (y) z sieci
 
-plt.show()
+    plot_functions(X, Y, approximated_y)
+
+
+if __name__ == '__main__':
+    main()
