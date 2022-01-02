@@ -124,7 +124,7 @@ class Network:
             if i % 100 == 0:
                 mean_loss_after = self.mean_loss()
                 print(
-                    f"Iteration: {i} delta: {mean_loss_after - mean_loss_before} Mean Loss: {mean_loss_after}"
+                    f"Iteration: {i}\tDelta: {mean_loss_after - mean_loss_before}\tMean Loss: {mean_loss_after}"
                 )
                 mean_loss_before = mean_loss_after
 
