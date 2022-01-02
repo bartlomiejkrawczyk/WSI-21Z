@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 
-def plot_functions(x: npt.NDArray[np.float32], y: npt.NDArray[np.float32], approximated_y: npt.NDArray[np.float32]):
+def plot_functions(x: npt.NDArray[np.float64], y: npt.NDArray[np.float64], approximated_y: npt.NDArray[np.float64]):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax.spines['left'].set_position('center')

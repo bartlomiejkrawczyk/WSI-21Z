@@ -1,80 +1,274 @@
 import numpy as np
 from numpy import typing as npt
 from plotter import plot_functions
+from typing import List, Tuple
+import sys
 
 
-INDEXES = [310774, 310774]
+INDEXES = [310774, 310608]
 INDEX_UNITS = [idx % 10 for idx in INDEXES]
+PARAMETERS: Tuple[float, float] = (
+    (INDEX_UNITS[0] + 1) ** 0.5, (INDEX_UNITS[1] + 1) ** 0.5
+)
 
 
 L_BOUND = -5
 U_BOUND = 5
 
 
-def function_to_approximate(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
-    return np.sin(x * np.sqrt(INDEX_UNITS[0] + 1)) + np.cos(x * np.sqrt(INDEX_UNITS[1] + 1))
+def function_to_approximate(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    return (np.sin(x * PARAMETERS[0])  # type: ignore
+            + np.cos(x * PARAMETERS[1])
+            )
 
 
-X: npt.NDArray[np.float32] = np.linspace(L_BOUND, U_BOUND, 100)  # type: ignore
+X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
+    L_BOUND, U_BOUND, 10000)
 Y = function_to_approximate(X)
 
+EVAL_X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
+    L_BOUND, U_BOUND, 100)
+EVAL_Y = function_to_approximate(EVAL_X)
 np.random.seed(1)
 
 
-# f logistyczna jako przykład sigmoidalej
-def sigmoid(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+def sigmoid(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    # ex = np.exp(x)
+    # return ex / (ex + 1)
     return 1 / (1 + np.exp(-x))
 
 
-# pochodna fun. 'sigmoid'
-def d_sigmoid(x: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+def sigmoid_derivative(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     s = 1 / (1 + np.exp(-x))
     return s * (1 - s)
 
 
-#f. straty
-def nloss(approximated_y: float, y: float) -> float:
-    return (approximated_y - y) ** 2
+def loss(approximated_y: npt.NDArray[np.float64],
+         expected_y: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+
+    return np.square(approximated_y - expected_y)
 
 
-# pochodna f. straty
-def d_nloss(approximated_y: float, y: float) -> float:
-    return 2 * (approximated_y - y)
+def loss_derivative(approximated_y: npt.NDArray[np.float64],
+                    expected_y: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+
+    return 2 * (approximated_y - expected_y)
+
+
+def unison_shuffled_copies(a: npt.NDArray[np.float64], b: npt.NDArray[np.float64]) \
+        -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    assert len(a) == len(b)
+    p: npt.NDArray[np.intc] = np.random.permutation(len(a))  # type: ignore
+    return a[p], b[p]
 
 
 class Network:
-    def __init__(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32], hidden_layer_size: int = 9):
-        self.x = x
-        self.y = y
-        # self.approximated_y = 0
+    def __init__(self, hidden_layer_size: int = 9):
 
-        self.hidden_layer_size = hidden_layer_size
-        self.LR = 0.003
+        self.sizes = [1, hidden_layer_size, 1]
 
-        # TODO:
+        self.weights: List[npt.NDArray[np.float64]] = [
+            np.random.uniform(-1.0, 1.0,  # type: ignore
+                              size=(self.sizes[i+1], self.sizes[i]))
+            for i in range(len(self.sizes) - 2)
+        ]
+        self.weights.append(
+            np.zeros(shape=(self.sizes[-1], self.sizes[-2]))  # type: ignore
+        )
 
-    def forward(self, x: npt.NDArray[np.float32]):
-        pass  # TODO:
+        self.biases: List[npt.NDArray[np.float64]] = [
+            np.random.uniform(-1.0, 1.0, size=(self.sizes[i+1], self.sizes[i]))
+            for i in range(len(self.sizes) - 2)
+        ]
+        self.biases.append(np.zeros(shape=(1, 1)))  # type: ignore
 
-    def predict(self, x: npt.NDArray[np.float32]):
-        # TODO:
-        return
+    @ staticmethod
+    def forward(x: npt.NDArray[np.float64],
+                weights: npt.NDArray[np.float64],
+                biases: npt.NDArray[np.float64],
+                activation: bool = True) -> npt.NDArray[np.float64]:
 
-    def backward(self, x: npt.NDArray[np.float32], y: npt.NDArray[np.float32]):
-        # TODO:
-        pass
+        result = (weights @ x) + biases
 
-    def train(self, x_set: npt.NDArray[np.float32], y_set: npt.NDArray[np.float32], iterations: int):
-        for _ in range(iterations):
-            # TODO:
-            pass
+        if activation:
+            return sigmoid(result)
+        return result
+
+    def predict(self, x: float) -> float:
+        activations: npt.NDArray[np.float64] = np.array([[x]])  # type: ignore
+        for i, values in enumerate(zip(self.weights, self.biases), start=1):
+            weights, biases = values
+            activations = self.forward(
+                activations, weights, biases,  i != len(self.weights))
+
+        return activations[0][0]
+
+    def mean_loss(self) -> float:
+
+        return loss(
+            np.array([self.predict(x) for x in EVAL_X]),  # type: ignore
+            EVAL_Y).mean()  # type: ignore
+
+    def train(self,
+              x_set: npt.NDArray[np.float64],
+              y_set: npt.NDArray[np.float64],
+              iterations: int,
+              mini_batch_size: int,
+              learning_rate: float) -> None:
+
+        mean_loss_before = 0
+        for i in range(iterations):
+            if i % 100 == 0:
+                mean_loss_before = self.mean_loss()
+
+            self.batch(x_set, y_set, mini_batch_size, learning_rate)
+
+            if i % 100 == 0:
+                mean_loss_after = self.mean_loss()
+                print(f"Epoch: {i} (Loss delta: {mean_loss_after - mean_loss_before}) (From: {mean_loss_before} To: {mean_loss_after})",
+                      file=sys.stderr)
+
+    def batch(self,
+              x_set: npt.NDArray[np.float64],
+              y_set: npt.NDArray[np.float64],
+              mini_batch_size: int,
+              learning_rate: float) -> None:
+
+        x_set, y_set = unison_shuffled_copies(x_set, y_set)
+
+        mini_batches = len(x_set) // mini_batch_size
+
+        for i in range(mini_batches):
+            start = mini_batch_size * i
+            end = start + mini_batch_size
+
+            self.mini_batch(x_set[start:end], y_set[start:end], learning_rate)
+
+    def mini_batch(self,
+                   x_set: npt.NDArray[np.float64],
+                   y_set: npt.NDArray[np.float64],
+                   learning_rate: float) -> None:
+
+        gradient_weights: List[npt.NDArray[np.float64]] = [
+            np.zeros(shape=weight.shape)  # type: ignore
+            for weight in self.weights
+        ]
+        gradient_biases: List[npt.NDArray[np.float64]] = [
+            np.zeros(shape=bias.shape)  # type: ignore
+            for bias in self.biases
+        ]
+        for x, y in zip(x_set, y_set):
+            delta_weights, delta_biases = self.backward(x, y)
+
+            for i, result in enumerate(zip(delta_weights, delta_biases)):
+                gradient_weights[i] += result[0]
+                gradient_biases[i] += result[1]
+
+        proportion = learning_rate / len(x_set)
+
+        gradient_weights = [
+            grad * proportion
+            for grad in gradient_weights
+        ]
+        gradient_biases = [
+            grad * proportion
+            for grad in gradient_biases
+        ]
+
+        self.weights = [
+            weight - grad
+            for weight, grad in zip(self.weights, gradient_weights)
+        ]
+        self.biases = [
+            bias - grad
+            for bias, grad in zip(self.biases, gradient_biases)
+        ]
+
+    def backward(self, x: float, expected_y: float) \
+            -> Tuple[List[npt.NDArray[np.float64]], List[npt.NDArray[np.float64]]]:
+
+        delta_biases: List[npt.NDArray[np.float64]] = [
+            np.zeros(shape=bias.shape)  # type: ignore
+            for bias in self.biases
+        ]
+        delta_weights: List[npt.NDArray[np.float64]] = [
+            np.zeros(shape=weight.shape)  # type: ignore
+            for weight in self.weights
+        ]
+
+        y: npt.NDArray[np.float64] = np.array([[expected_y]])  # type: ignore
+
+        activation: npt.NDArray[np.float64] = np.array([[x]])  # type: ignore
+        activations: List[npt.NDArray[np.float64]] = [activation]
+        zs: List[npt.NDArray[np.float64]] = []
+        for bias, weight in zip(self.biases, self.weights):
+            z = (weight @ activation) + bias
+            zs.append(z)
+            activation = sigmoid(z)
+            activations.append(activation)
+
+        delta = loss_derivative(zs[-1], y)
+        delta_biases[-1] = delta
+        delta_weights[-1] = delta @ activations[-2].T
+
+        for i in range(2, len(self.sizes)):
+            # delta = self.weights[-i+1].T @ delta
+            # delta *= activations[-i]
+            # delta *= 1 - activations[-i]
+            # delta_biases[-i] = delta
+            # delta_weights[-i] = delta @ activations[-i-1].T
+
+            z = zs[-i]
+            sp = sigmoid_derivative(z)
+            delta = self.weights[-i+1].T @ delta * sp
+            delta_biases[-i] = delta
+            delta_weights[-i] = delta @ activations[-i-1].T
+
+        # activations_output: npt.NDArray[np.float64] = np.array(   # type: ignore
+        #     [[expected_y]]
+        # )
+        # activations_input: npt.NDArray[np.float64] = np.array(   # type: ignore
+        #     [[x]]
+        # )
+
+        # activations: List[npt.NDArray[np.float64]] = [activations_input]
+
+        # for i in range(len(self.weights) - 1):
+        #     activations.append(
+        #         sigmoid(self.weights[i] @ activations[i] + self.biases[i])
+        #     )
+
+        # activations.append(
+        #     self.weights[-1] @ activations[-1] + self.biases[-1]
+        # )
+
+        # # TODO: Refactor me
+
+        # delta_biases: List[npt.NDArray[np.float64]] = []
+
+        # delta_biases_output = loss_derivative(
+        #     activations[-1], activations_output
+        # )
+        # delta_weight_output = delta_biases_output @ activations[-2].T
+
+        # delta_biases_hidden = self.weights[-1].T @ delta_biases_output
+        # delta_biases_hidden *= activations[-2]
+        # delta_biases_hidden *= 1 - activations[-2]
+        # delta_weights_hidden = delta_biases_hidden @ activations[-3]
+
+        # delta_weights = [delta_weights_hidden, delta_weight_output]
+        # delta_biases = [delta_biases_hidden, delta_biases_output]
+
+        return delta_weights, delta_biases
 
 
 def main():
-    nn = Network(X, Y)
-    nn.train(X, Y, 15000)
+    nn = Network(13)
+    nn.train(X, Y, 1_000, 200, 1e-1)
 
-    approximated_y = Y / 2  # TODO: tu umiescić wyniki (y) z sieci
+    approximated_y: npt.NDArray[np.float64] = np.array(  # type: ignore
+        [nn.predict(x) for x in X]
+    )
 
     plot_functions(X, Y, approximated_y)
 
