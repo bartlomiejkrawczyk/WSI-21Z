@@ -2,7 +2,6 @@ import numpy as np
 from numpy import typing as npt
 from plotter import plot_functions
 from typing import List, Tuple
-import sys
 
 
 INDEXES = [310774, 310608]
@@ -10,7 +9,6 @@ INDEX_UNITS = [idx % 10 for idx in INDEXES]
 PARAMETERS: Tuple[float, float] = (
     (INDEX_UNITS[0] + 1) ** 0.5, (INDEX_UNITS[1] + 1) ** 0.5
 )
-
 
 L_BOUND = -5
 U_BOUND = 5
@@ -23,18 +21,23 @@ def function_to_approximate(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float6
 
 
 X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
-    L_BOUND, U_BOUND, 10000)
+    L_BOUND,
+    U_BOUND,
+    10_000
+)
 Y = function_to_approximate(X)
 
 EVAL_X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
-    L_BOUND, U_BOUND, 100)
+    L_BOUND,
+    U_BOUND,
+    100
+)
 EVAL_Y = function_to_approximate(EVAL_X)
+
 np.random.seed(1)
 
 
 def sigmoid(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
-    # ex = np.exp(x)
-    # return ex / (ex + 1)
     return 1 / (1 + np.exp(-x))
 
 
@@ -82,7 +85,7 @@ class Network:
         ]
         self.biases.append(np.zeros(shape=(1, 1)))  # type: ignore
 
-    @ staticmethod
+    @staticmethod
     def forward(x: npt.NDArray[np.float64],
                 weights: npt.NDArray[np.float64],
                 biases: npt.NDArray[np.float64],
@@ -99,7 +102,11 @@ class Network:
         for i, values in enumerate(zip(self.weights, self.biases), start=1):
             weights, biases = values
             activations = self.forward(
-                activations, weights, biases,  i != len(self.weights))
+                activations,
+                weights,
+                biases,
+                i != len(self.weights)
+            )
 
         return activations[0][0]
 
@@ -116,17 +123,17 @@ class Network:
               mini_batch_size: int,
               learning_rate: float) -> None:
 
-        mean_loss_before = 0
+        mean_loss_before = self.mean_loss()
         for i in range(iterations):
-            if i % 100 == 0:
-                mean_loss_before = self.mean_loss()
 
             self.batch(x_set, y_set, mini_batch_size, learning_rate)
 
             if i % 100 == 0:
                 mean_loss_after = self.mean_loss()
-                print(f"Epoch: {i} (Loss delta: {mean_loss_after - mean_loss_before}) (From: {mean_loss_before} To: {mean_loss_after})",
-                      file=sys.stderr)
+                print(
+                    f"Iteration: {i} delta: {mean_loss_after - mean_loss_before} Mean Loss: {mean_loss_after}"
+                )
+                mean_loss_before = mean_loss_after
 
     def batch(self,
               x_set: npt.NDArray[np.float64],
@@ -200,71 +207,30 @@ class Network:
 
         activation: npt.NDArray[np.float64] = np.array([[x]])  # type: ignore
         activations: List[npt.NDArray[np.float64]] = [activation]
-        zs: List[npt.NDArray[np.float64]] = []
+        vectors: List[npt.NDArray[np.float64]] = []
         for bias, weight in zip(self.biases, self.weights):
-            z = (weight @ activation) + bias
-            zs.append(z)
-            activation = sigmoid(z)
+            vector = (weight @ activation) + bias
+            vectors.append(vector)
+            activation = sigmoid(vector)
             activations.append(activation)
 
-        delta = loss_derivative(zs[-1], y)
+        delta = loss_derivative(vectors[-1], y)
         delta_biases[-1] = delta
-        delta_weights[-1] = delta @ activations[-2].T
+        delta_weights[-1] = delta @ activations[-2].transpose()
 
         for i in range(2, len(self.sizes)):
-            # delta = self.weights[-i+1].T @ delta
-            # delta *= activations[-i]
-            # delta *= 1 - activations[-i]
-            # delta_biases[-i] = delta
-            # delta_weights[-i] = delta @ activations[-i-1].T
-
-            z = zs[-i]
-            sp = sigmoid_derivative(z)
-            delta = self.weights[-i+1].T @ delta * sp
+            vector = vectors[-i]
+            d_sigmoid = sigmoid_derivative(vector)
+            delta = self.weights[-i+1].transpose() @ delta * d_sigmoid
             delta_biases[-i] = delta
-            delta_weights[-i] = delta @ activations[-i-1].T
-
-        # activations_output: npt.NDArray[np.float64] = np.array(   # type: ignore
-        #     [[expected_y]]
-        # )
-        # activations_input: npt.NDArray[np.float64] = np.array(   # type: ignore
-        #     [[x]]
-        # )
-
-        # activations: List[npt.NDArray[np.float64]] = [activations_input]
-
-        # for i in range(len(self.weights) - 1):
-        #     activations.append(
-        #         sigmoid(self.weights[i] @ activations[i] + self.biases[i])
-        #     )
-
-        # activations.append(
-        #     self.weights[-1] @ activations[-1] + self.biases[-1]
-        # )
-
-        # # TODO: Refactor me
-
-        # delta_biases: List[npt.NDArray[np.float64]] = []
-
-        # delta_biases_output = loss_derivative(
-        #     activations[-1], activations_output
-        # )
-        # delta_weight_output = delta_biases_output @ activations[-2].T
-
-        # delta_biases_hidden = self.weights[-1].T @ delta_biases_output
-        # delta_biases_hidden *= activations[-2]
-        # delta_biases_hidden *= 1 - activations[-2]
-        # delta_weights_hidden = delta_biases_hidden @ activations[-3]
-
-        # delta_weights = [delta_weights_hidden, delta_weight_output]
-        # delta_biases = [delta_biases_hidden, delta_biases_output]
+            delta_weights[-i] = delta @ activations[-i-1].transpose()
 
         return delta_weights, delta_biases
 
 
 def main():
-    nn = Network(13)
-    nn.train(X, Y, 1_000, 200, 1e-1)
+    nn = Network()
+    nn.train(X, Y, 1_000, 20, 1e-1)
 
     approximated_y: npt.NDArray[np.float64] = np.array(  # type: ignore
         [nn.predict(x) for x in X]
