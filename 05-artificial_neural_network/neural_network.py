@@ -61,7 +61,7 @@ def unison_shuffled_copies(a: npt.NDArray[np.float64], b: npt.NDArray[np.float64
 class Network:
     def __init__(self, hidden_layer_size: int = 9):
 
-        self.sizes = [1, hidden_layer_size, 1]
+        self.sizes = [1, hidden_layer_size, 5, 1]
 
         self.weights: List[npt.NDArray[np.float64]] = [
             np.random.uniform(-1.0, 1.0,  # type: ignore
@@ -73,10 +73,10 @@ class Network:
         )
 
         self.biases: List[npt.NDArray[np.float64]] = [
-            np.random.uniform(-1.0, 1.0, size=(self.sizes[i+1], self.sizes[i]))
+            np.random.uniform(-1.0, 1.0, size=(self.sizes[i+1], 1))
             for i in range(len(self.sizes) - 2)
         ]
-        self.biases.append(np.zeros(shape=(1, 1)))  # type: ignore
+        self.biases.append(np.zeros(shape=(self.sizes[-1], 1)))  # type: ignore
 
     @staticmethod
     def forward(x: npt.NDArray[np.float64],
@@ -209,14 +209,14 @@ class Network:
 
         delta = loss_derivative(vectors[-1], y)
         delta_biases[-1] = delta
-        delta_weights[-1] = delta @ activations[-2].transpose()
+        delta_weights[-1] = delta @ activations[-2].T
 
         for i in range(2, len(self.sizes)):
             vector = vectors[-i]
             d_sigmoid = sigmoid_derivative(vector)
-            delta = self.weights[-i+1].transpose() @ delta * d_sigmoid
+            delta = self.weights[-i+1].T @ delta * d_sigmoid
             delta_biases[-i] = delta
-            delta_weights[-i] = delta @ activations[-i-1].transpose()
+            delta_weights[-i] = delta @ activations[-i-1].T
 
         return delta_weights, delta_biases
 
