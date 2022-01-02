@@ -20,13 +20,6 @@ def function_to_approximate(x: npt.NDArray[np.float64]) -> npt.NDArray[np.float6
             )
 
 
-X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
-    L_BOUND,
-    U_BOUND,
-    10_000
-)
-Y = function_to_approximate(X)
-
 EVAL_X: npt.NDArray[np.float64] = np.linspace(  # type: ignore
     L_BOUND,
     U_BOUND,
@@ -229,14 +222,22 @@ class Network:
 
 
 def main():
-    nn = Network()
-    nn.train(X, Y, 1_000, 20, 1e-1)
-
-    approximated_y: npt.NDArray[np.float64] = np.array(  # type: ignore
-        [nn.predict(x) for x in X]
+    training_x: npt.NDArray[np.float64] = np.linspace(  # type: ignore
+        L_BOUND,
+        U_BOUND,
+        1_000
     )
 
-    plot_functions(X, Y, approximated_y)
+    training_y = function_to_approximate(training_x)
+
+    nn = Network()
+    nn.train(training_x, training_y, 1_000, 20, 1e-1)
+
+    approximated_y: npt.NDArray[np.float64] = np.array(  # type: ignore
+        [nn.predict(x) for x in training_x]
+    )
+
+    plot_functions(training_x, training_y, approximated_y)
 
 
 if __name__ == '__main__':
