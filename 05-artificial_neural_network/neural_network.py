@@ -61,7 +61,7 @@ def unison_shuffled_copies(a: npt.NDArray[np.float64], b: npt.NDArray[np.float64
 class Network:
     def __init__(self, hidden_layer_sizes: List[int] = []):
         if len(hidden_layer_sizes) == 0:
-            hidden_layer_sizes = [9]
+            hidden_layer_sizes = [13]
 
         self.sizes = [1]
         self.sizes.extend(hidden_layer_sizes)
@@ -234,7 +234,7 @@ def main():
 
     training_y = function_to_approximate(training_x)
 
-    nn = Network([9])
+    nn = Network()
     nn.train(training_x, training_y, 1_000, 200, 1e-1)
 
     approximated_y: npt.NDArray[np.float64] = np.array(  # type: ignore
