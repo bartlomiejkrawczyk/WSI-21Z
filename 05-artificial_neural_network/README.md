@@ -34,7 +34,7 @@ Jak liczba neuronów w warstwie ukrytej wpływa na jakość aproksymacji?
 Parametry dla najlepszego wyniku:
 - liczba neuronow: `13`
 - Liczba epok: `5000`
-- rozmiar zbioru: `100`
+- rozmiar mini zbioru: `100`
 - learning rate: `0.1`
 
 ![](plots/5000_100_01.png)
@@ -43,7 +43,7 @@ Parametry dla najlepszego wyniku:
 
 Parametry:
 - Liczba epok: `1000`
-- rozmiar zbioru: `200`
+- rozmiar mini zbioru: `200`
 - learning rate: `0.1`
 
 l. neuronów | jakość aproksymacji  | wykres
@@ -63,7 +63,7 @@ l. neuronów | jakość aproksymacji  | wykres
 
 Parametry:
 - liczba neuronow: `13`
-- rozmiar zbioru: `100`
+- rozmiar mini zbioru: `100`
 - learning rate: `0.1`
 
 l. epok | jakość aproksymacji  | wykres
@@ -78,24 +78,24 @@ l. epok | jakość aproksymacji  | wykres
 
  Jak widzimy w tym przypadku im więcej tym lepiej, jednakże po przekroczeniu pewnego progu wyniki, nie ulegają poprawie, tylko utrzymują się na pewnym poziomie jakości aproksymacji.
 
-3. Wpływ rozmiaru zbioru na jakość aproksymacji
+3. Wpływ rozmiaru mini zbioru na jakość aproksymacji
 
 Parametry:
 - liczba neuronow: `13`
 - Liczba epok: `1000`
 - learning rate: `0.1`
 
-r. zbioru | jakość aproksymacji  | wykres
-----------|----------------------|-------
- 5        | 0.742208769993701    | ![](plots/1000_5_01.png)
- 10       | 0.7329583312672093   | ![](plots/1000_10_01.png)
- 25       | 0.00146432025873798  | ![](plots/1000_25_01.png)
- 50       | 0.000609914994377384 | ![](plots/1000_50_01.png)
- 100      | 0.005854738926109195 | ![](plots/1000_100_01.png)
- 200      | 0.02101232492836344  | ![](plots/1000_200_01.png)
+r. min zbioru | jakość aproksymacji  | wykres
+--------------|----------------------|-------
+ 5            | 0.742208769993701    | ![](plots/1000_5_01.png)
+ 10           | 0.7329583312672093   | ![](plots/1000_10_01.png)
+ 25           | 0.00146432025873798  | ![](plots/1000_25_01.png)
+ 50           | 0.000609914994377384 | ![](plots/1000_50_01.png)
+ 100          | 0.005854738926109195 | ![](plots/1000_100_01.png)
+ 200          | 0.02101232492836344  | ![](plots/1000_200_01.png)
 
 
-Dla poszczególnych parametrów musimy odnaleść odpowiedni rozmiar zbioru, ponieważ za duży rozmiar lub za mały, negatwynie wpływa na jakość aproksymacji.
+Dla poszczególnych parametrów musimy odnaleść odpowiedni rozmiar mini zbioru, ponieważ za duży rozmiar lub za mały, negatwynie wpływa na jakość aproksymacji.
 
 4. Wpływ learning rate na jakość aproksymacji
 
@@ -113,3 +113,8 @@ learning rate | jakość aproksymacji  | wykres
 
 
 Im mniejszy lerning rate, tym mniejsza jakosć aproksymacji, jednakże jest to spowodowane tym, że na stałym poziomy pozostają inne parametry i w teorii powinna nam się zwiększać dokładkość, ponieważ robimy małe, bardziej dokładne skoki, ale żeby taki stan osiągnąć powinniśmy znacząco zwiększyć liczbę epok.
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
