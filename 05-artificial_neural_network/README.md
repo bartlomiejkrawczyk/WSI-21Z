@@ -28,6 +28,8 @@ Jak liczba neuronów w warstwie ukrytej wpływa na jakość aproksymacji?
 
 ## Odpowiedzi
 
+- funkcja czerwona - funkcja aproksymowana
+- funkcja niebieska - funkcja aproksymacji
 
 Parametry dla najlepszego wyniku:
 - liczba neuronow: `13`
