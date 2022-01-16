@@ -21,7 +21,9 @@ class Action(IntEnum):
 
 
 def reward_default(field: Field) -> float:
-    return float(field == Field.GOAL)
+    if field == Field.GOAL:
+        return 1.0
+    return 0.0
 
 
 def reward_2(field: Field) -> float:
@@ -66,7 +68,7 @@ class FrozenLake:
     You receive a reward of 1 if you reach the goal, and zero otherwise.
     """
 
-    def __init__(self, reward_function: Callable[[Field], float] = reward_default) -> None:
+    def __init__(self, reward_function: Callable[[Field], float]) -> None:
         self.map = array("b",
                          b"SFFFFFFF"
                          b"FFFFFFFF"
@@ -147,8 +149,10 @@ class FrozenLake:
             ]
             for row in range(self.length)
         ]
-        # assert map[self.state // self.length][self.state % self.length] != 'H'
-        map[self.state // self.length][self.state % self.length] = 'X'
+
+        map[self.state // self.length][self.state % self.length] = (
+            map[self.state // self.length][self.state % self.length].lower()
+        )
 
         command = 'clear'
         if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls

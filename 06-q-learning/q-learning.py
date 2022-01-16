@@ -8,13 +8,13 @@ from multiprocessing.pool import Pool
 from functools import partial
 from itertools import repeat
 
-MAX_STEPS = 200
+MAX_STEPS = 400
 
-LEARNING_RATE = 0.8
+LEARNING_RATE = 0.05
 
 MAX_EPSILON = 1.0
-MIN_EPSILON = 0.01
-DECAY_RATE = 0.005
+MIN_EPSILON = 0.1
+DECAY_RATE = 0.0001
 
 GAMMA = 0.95
 
@@ -94,8 +94,7 @@ def run_q_learning(episodes: int, reward: Callable[[Field], float]) -> float:
     return evaluate_qtable(environment, qtable)
 
 
-def render_frozenlake(qtable: List[List[float]]):
-    environment = FrozenLake()
+def render_frozenlake(environment: FrozenLake, qtable: List[List[float]]):
     for step in range(200):
         state = environment.state
         action = max(Action, key=lambda x: qtable[state][x])
@@ -124,4 +123,11 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # render_frozenlake(q_learning(FrozenLake(), 250_000))
+
+    # environment = FrozenLake(REWARD_FUNCTIONS[0])
+    # qtable = q_learning(environment, 100_000)
+    # print(qtable)
+    # print(evaluate_qtable(environment, qtable))
+    # environment.reset()
+
+    # render_frozenlake(environment, qtable)
