@@ -12,8 +12,9 @@ MAX_STEPS = 400
 
 LEARNING_RATE = 0.05
 
-MAX_EPSILON = 1.0
-MIN_EPSILON = 0.1
+EPSILON = 0.8
+MAX_EPSILON = 1.0  # EPSILON  # 1.0
+MIN_EPSILON = 0.1  # EPSILON  # 0.1
 DECAY_RATE = 0.0001
 
 GAMMA = 0.95
@@ -124,8 +125,8 @@ def main():
 if __name__ == '__main__':
     main()
 
-    # environment = FrozenLake(REWARD_FUNCTIONS[0])
-    # qtable = q_learning(environment, 100_000)
+    # environment = FrozenLake(REWARD_FUNCTIONS[1])
+    # qtable = q_learning(environment, 50_000)
     # print(qtable)
     # print(evaluate_qtable(environment, qtable))
     # environment.reset()
