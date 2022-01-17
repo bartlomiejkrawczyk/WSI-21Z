@@ -63,12 +63,12 @@ def print_statistics(variables: List[Variable], filepath: str = FILE_TO_GENERATE
     with open(filepath, 'r') as handle:
         lines = handle.readlines()
 
+    print('name|frequency', '-|-', sep='\n')
     for idx, variable in enumerate(variables):
-        print(variable.name)
         counts = {'T': 0, 'F': 0}
         for line in lines:
             counts[str(line[idx * 2])] += 1
-        print(counts['T'] / NUMBER_OF_SAMPLES)
+        print(variable.name, counts['T'] / NUMBER_OF_SAMPLES, sep='|')
 
 
 def main():
