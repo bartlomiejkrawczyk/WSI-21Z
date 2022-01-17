@@ -17,20 +17,22 @@ class Variable(NamedTuple):
 
 class Sample:
     def __init__(self, variables: List[Variable]) -> None:
-        self.values: OrderedDict[str, bool] = OrderedDict()
+        self.values: OrderedDict[str, str] = OrderedDict()
         for variable in variables:
             parent_values = ''
             for name in variable.depends_on:
-                parent_values += 'T' if self.values[name] else 'F'
+                parent_values += self.values[name]
 
             self.values[variable.name] = (
-                uniform(0, 1) < variable.probabilities[parent_values]
+                'T'
+                if uniform(0, 1) < variable.probabilities[parent_values]
+                else 'F'
             )
 
     def __str__(self) -> str:
         result = ''
         for val in self.values.values():
-            result += 'T,' if val else 'F,'
+            result += val + ','
         return result[:-1]
 
 
