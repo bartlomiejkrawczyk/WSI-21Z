@@ -1,6 +1,5 @@
-from random import choice, uniform
+from random import choice, uniform, shuffle
 from statistics import stdev, mean
-from math import exp
 from typing import List, Callable
 
 from frozenlake import Action, FrozenLake, REWARD_FUNCTIONS, Field
@@ -12,10 +11,7 @@ MAX_STEPS = 400
 
 LEARNING_RATE = 0.05
 
-EPSILON = 0.8
-MAX_EPSILON = 1.0  # EPSILON  # 1.0
-MIN_EPSILON = 0.1  # EPSILON  # 0.1
-DECAY_RATE = 0.0001
+EPSILON = 0.1
 
 GAMMA = 0.95
 
@@ -25,25 +21,24 @@ def q_learning(
         episodes: int,
         max_steps: int = MAX_STEPS,
         learning_rate: float = LEARNING_RATE,
-        min_epsilon: float = MIN_EPSILON,
-        max_epsilon: float = MAX_EPSILON,
-        decay_rate: float = DECAY_RATE,
+        epsilon: float = EPSILON,
         gamma: float = GAMMA) -> List[List[float]]:
 
     qtable: List[List[float]] = [
         [0.0, 0.0, 0.0, 0.0]
         for _ in range(len(environment.map))
     ]
-    epsilon: float = max_epsilon
 
-    for episode in range(episodes):
+    for _ in range(episodes):
         environment.reset()
 
         for _ in range(max_steps):
             state = environment.state
 
             if uniform(0, 1) > epsilon:
-                action = max(Action, key=lambda x: qtable[state][x])
+                actions = list(Action)
+                shuffle(actions)
+                action = max(actions, key=lambda x: qtable[state][x])
             else:
                 action = choice(tuple(Action))
 
@@ -60,11 +55,6 @@ def q_learning(
 
             if done:
                 break
-
-        epsilon = (
-            min_epsilon + (max_epsilon - min_epsilon) *
-            exp(-decay_rate * episode)
-        )
 
     return qtable
 
