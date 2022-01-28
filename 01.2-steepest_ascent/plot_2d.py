@@ -1,11 +1,10 @@
 from matplotlib import pyplot as plt
-from matplotlib import ticker
 import numpy as np
 from math import sqrt
 from typing import Callable, List, TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float64]]
 else:
     NDArrayFloat = Any
 
@@ -16,17 +15,21 @@ def plot_contour_chart_2d(
 
     plot_step = furthest_point / 200
 
-    x_arr = y_arr = np.arange(-furthest_point, furthest_point, plot_step)
-    X, Y = np.meshgrid(x_arr, y_arr)
-    Z = np.empty(X.shape)
+    x_arr = y_arr = np.arange(  # type: ignore
+        -furthest_point,
+        furthest_point,
+        plot_step
+    )
+    X, Y = np.meshgrid(x_arr, y_arr)  # type: ignore
+    Z = np.empty(X.shape)  # type: ignore
 
-    for i in range(X.shape[0]):
-        for j in range(X.shape[1]):
-            Z[i, j] = function(np.array([X[i, j], Y[i, j]]))
+    for i in range(X.shape[0]):  # type: ignore
+        for j in range(X.shape[1]):   # type: ignore
+            Z[i, j] = function(np.array([X[i, j], Y[i, j]]))   # type: ignore
 
     contour = plt.contour(X, Y, Z, 20)
     plt.colorbar()
-    # plt.clabel(contour, inline=1, fontsize=10)
+    plt.clabel(contour, inline=1, fontsize=10)
 
 
 def add_arrow(point: NDArrayFloat, next: NDArrayFloat):

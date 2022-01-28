@@ -1,11 +1,10 @@
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
 import numpy as np
 from cec2017.functions import f1
 from typing import Callable, List, TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float64]]
 else:
     NDArrayFloat = Any
 
@@ -18,14 +17,18 @@ def plot_contour_chart_3d(
 
     plot_step = furthest_point / 200
 
-    x_arr = y_arr = np.arange(-furthest_point, furthest_point, plot_step)
+    x_arr = y_arr = np.arange(  # type: ignore
+        -furthest_point,
+        furthest_point,
+        plot_step
+    )
 
-    X, Y = np.meshgrid(x_arr, y_arr)
-    Z = np.empty(X.shape)
+    X, Y = np.meshgrid(x_arr, y_arr)  # type: ignore
+    Z = np.empty(X.shape)  # type: ignore
 
-    for i in range(X.shape[0]):
-        for j in range(X.shape[1]):
-            Z[i, j] = function(np.array([X[i, j], Y[i, j]]))
+    for i in range(X.shape[0]):  # type: ignore
+        for j in range(X.shape[1]):  # type: ignore
+            Z[i, j] = function(np.array([X[i, j], Y[i, j]]))  # type: ignore
 
     axes.contour3D(X, Y, Z, 40)
     axes.set_xlabel('x')
@@ -41,8 +44,15 @@ def add_plot(
         function: Callable[[NDArrayFloat], float],
         X: NDArrayFloat, Y: NDArrayFloat) -> None:
 
-    axes.plot(X, Y, [function([x, y])
-              for x, y in zip(X, Y)], color='r', marker='.')
+    axes.plot(
+        X, Y,
+        [
+            function(np.array([x, y]))   # type: ignore
+            for x, y in zip(X, Y)
+        ],
+        color='r',
+        marker='.'
+    )
 
 
 def draw_3d_function_with_plot(
@@ -55,7 +65,7 @@ def draw_3d_function_with_plot(
 
     plot_contour_chart_3d(axes, function, furthest_point * 1.25, function_name)
 
-    points = list(zip(*points))
+    points = np.array(list(zip(*points)))   # type: ignore
     add_plot(axes, function, points[0], points[1])
 
     plt.show()
@@ -63,7 +73,9 @@ def draw_3d_function_with_plot(
 
 def main():
     draw_3d_function_with_plot(
-        f1, [np.random.uniform(-10, 10, size=2) for _ in range(10)])
+        f1,   # type: ignore
+        [np.random.uniform(-10, 10, size=2) for _ in range(10)]
+    )
 
 
 if __name__ == '__main__':

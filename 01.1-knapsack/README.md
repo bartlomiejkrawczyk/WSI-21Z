@@ -13,9 +13,9 @@ Numer indeksu: 310774
 Mamy problem plecakowy jak na wykładzie:
 
 ```python
-w = np.array([8, 3, 5, 2]) # waga przedmiotów
+w = [8, 3, 5, 2] # waga przedmiotów
 W = 9 # maksymalna waga plecaka
-p = np.array([16, 8, 9, 6]) # wartość przedmiotów
+p = [16, 8, 9, 6] # wartość przedmiotów
 ```
 
 1. Znaleźć rozwiązanie optymalne przez przegląd wyczerpujący

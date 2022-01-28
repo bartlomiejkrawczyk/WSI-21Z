@@ -3,10 +3,10 @@ from cec2017.functions import f1, f2, f3
 from plot_3d import draw_3d_function_with_plot
 from plot_2d import draw_2d_function_with_arrows
 import operator
-from typing import Callable, List, TYPE_CHECKING, Any
+from typing import Callable, List, TYPE_CHECKING, Any, Tuple
 
 if TYPE_CHECKING:
-    NDArrayFloat = np.ndarray[Any, np.dtype[np.float]]
+    NDArrayFloat = np.ndarray[Any, np.dtype[np.float64]]
 else:
     NDArrayFloat = Any
 
@@ -26,7 +26,12 @@ def gradient(
         function: Callable[[NDArrayFloat], float],
         point: NDArrayFloat) -> NDArrayFloat:
 
-    return np.array([partial_derivative(function, point, i) for i in range(len(point))])
+    return np.array(   # type: ignore
+        [
+            partial_derivative(function, point, i)
+            for i in range(len(point))
+        ]
+    )
 
 
 def stop(
@@ -140,10 +145,10 @@ def draw_2d_function(
 
 
 def main():
-    def booth_function(x):
+    def booth_function(x: NDArrayFloat) -> float:
         return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
 
-    functions = [
+    functions: List[Tuple[Callable[[NDArrayFloat], float], float, str]] = [
         (booth_function, -0.05, "Booth Function, beta = 0.05"),
         (f1, -0.00000001, "F1 Function, beta = 0.00000001"),
         (f1, -0.1, "F1 Function, beta = 0.1"),
@@ -151,8 +156,8 @@ def main():
         (f3, -0.00005, "F3 Function, beta = 0.00005")
     ]
     for function, step_factor, function_name in functions:
-        draw_2d_function(function, step_factor, function_name, False)
-        # draw_2d_function(function, step_factor, function_name, True)
+        # draw_2d_function(function, step_factor, function_name, False)
+        draw_2d_function(function, step_factor, function_name, True)
         # draw_3d_function(function, step_factor, function_name, False)
         # draw_3d_function(function, step_factor, function_name, True)
 
