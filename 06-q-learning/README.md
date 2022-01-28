@@ -24,7 +24,11 @@ GAMMA = 0.95
 
 # Wyniki
 
-reward_default
+## reward_default
+
+- Dojście do celu +1
+- Wpadnięcie do dziury 0
+
 episodes | min  | avg    | max  | stdev
 ---------|------|--------|------|-------------------
 1000     | 0.0  | 2.2    | 7.9  | 2.13834047803431
@@ -35,7 +39,11 @@ episodes | min  | avg    | max  | stdev
 100000   | 26.6 | 66.172 | 83.1 | 14.147747759508107
 250000   | 54.1 | 69.704 | 86.2 | 9.506553879648852
 
-reward_2
+## reward_2
+
+- Dojście do celu +1
+- Wpadnięcie do dziury -1
+
 episodes | min  | avg    | max  | stdev
 ---------|------|--------|------|-------------------
 1000     | 53.1 | 74.164 | 88.3 | 10.363834554192124
@@ -46,7 +54,11 @@ episodes | min  | avg    | max  | stdev
 100000   | 70.3 | 84.068 | 89.3 | 4.705911176382316
 250000   | 60.0 | 83.628 | 89.3 | 6.193916370116728
 
-reward_3
+## reward_3
+
+- Dojście do celu +10
+- Wpadnięcie do dziury -1
+
 episodes | min  | avg    | max  | stdev
 ---------|------|--------|------|-------------------
 1000     | 31.0 | 62.804 | 84.2 | 16.17032982553747
@@ -60,6 +72,6 @@ episodes | min  | avg    | max  | stdev
 # Wnioski
 
 - Z wyników wyszło mi, że najlepszą funkcją nagrody z testowanych funkcji nagrody dla tego algorytmu jest:
-    - 1 dla GOAL i -1 dla HOLE
+    - 1 dla dojścia do celu i -1 dla wpadnięcia w dziurę
 - Wynik zależy w dużym stopniu od dobranych parametrów
 - Dużą różnicę wprowadza w przypadku gdy jest kilka maksimów - losowanie wybranej ścieżki
