@@ -1,34 +1,34 @@
 [
     {
-            "name" : "Chair",
-            "depends_on" : [],
-            "probabilities" : {
-                "" : 0.8
-            }
-        },
-        {
-            "name" : "Sport",
-            "depends_on" : [],
-            "probabilities" : {
-                "" : 0.02
-            }
-        },
-        {
-            "name" : "Back",
-            "depends_on" : ["Chair", "Sport"],
-            "probabilities" : {
-                "TT" : 0.9,
-                "TF" : 0.2,
-                "FT" : 0.9,
-                "FF": 0.01
-            }
-        },
-        {
-            "name" : "Ache",
-            "depends_on" : ["Back"],
-            "probabilities" : {
-                "T" : 0.7,
-                "F" : 0.1
-            }
+        "name" : "Chair",
+        "depends_on" : [],
+        "probabilities" : {
+            "" : 0.8
         }
+    },
+    {
+        "name" : "Sport",
+        "depends_on" : [],
+        "probabilities" : {
+            "" : 0.02
+        }
+    },
+    {
+        "name" : "Back",
+        "depends_on" : ["Chair", "Sport"],
+        "probabilities" : {
+            "TT" : 0.9,
+            "TF" : 0.2,
+            "FT" : 0.9,
+            "FF": 0.01
+        }
+    },
+    {
+        "name" : "Ache",
+        "depends_on" : ["Back"],
+        "probabilities" : {
+            "T" : 0.7,
+            "F" : 0.1
+        }
+    }
 ]
