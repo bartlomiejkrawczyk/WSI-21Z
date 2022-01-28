@@ -1,9 +1,9 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Any
 from cec2017.functions import f4
 from random import choices, gauss, random
 from plot_2d import plot_contour_chart_2d
 from matplotlib import pyplot as plt
-from colour import Color
+from colour import Color  # type: ignore
 import heapq
 from functools import total_ordering
 
@@ -25,16 +25,16 @@ Result:
 
 @total_ordering
 class Point:
-    def __init__(self, point) -> None:
+    def __init__(self, point: List[float]) -> None:
         self.point = point
 
-    def evaluate(self, function):
+    def evaluate(self, function: Callable[[List[float]], float]):
         self.rating = function(self.point)
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'Point'):
         return self.rating < other.rating
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         return self.rating == other.rating
 
 
@@ -111,8 +111,11 @@ def evolve(function: Callable[[List[float]], float],
         best = min(best, best_mutated)
 
         if __name__ == '__main__':
-            plt.scatter(*zip(*[p.point for p in population]),
-                        c=COLORS[t].get_hex(), marker='.')
+            plt.scatter(  # type: ignore
+                *zip(*[p.point for p in population]),
+                c=COLORS[t].get_hex(),
+                marker='.'  # type: ignore
+            )
 
         population = succesion(population, mutated,
                                elite_count, population_size)
@@ -123,7 +126,7 @@ def evolve(function: Callable[[List[float]], float],
 MAX_FUNCTION_EVALUATIONS = 10_000
 
 MAX_BOUND = 100
-FUNCTION = f4
+FUNCTION: Callable[[List[float]], float] = f4  # type: ignore
 
 MUTATION_FACTOR = 2.0
 POPULATION_SIZE = 100
@@ -137,18 +140,31 @@ POPULATION = [[random() * 200 - 100 for _ in range(2)]
 
 def main():
 
-    print(evolve(FUNCTION, POPULATION, MUTATION_FACTOR,
-          POPULATION_SIZE, ELITE_COUNT, MAX_ITERATIONS))
+    print(
+        evolve(
+            FUNCTION,  # type: ignore
+            POPULATION,
+            MUTATION_FACTOR,
+            POPULATION_SIZE,
+            ELITE_COUNT,
+            MAX_ITERATIONS
+        )
+    )
 
-    plot_contour_chart_2d(FUNCTION, MAX_BOUND)
+    plot_contour_chart_2d(FUNCTION, MAX_BOUND)  # type: ignore
     plt.show()
 
 
 if __name__ == '__main__':
-    RED = Color("red")
-    GREEN = Color("green")
-    BLUE = Color("blue")
-    COLORS = list(BLUE.range_to(GREEN, MAX_ITERATIONS // 2))
-    COLORS += list(GREEN.range_to(RED, MAX_ITERATIONS - MAX_ITERATIONS // 2))
+    RED = Color("red")  # type: ignore
+    GREEN = Color("green")  # type: ignore
+    BLUE = Color("blue")  # type: ignore
+    COLORS = list(BLUE.range_to(GREEN, MAX_ITERATIONS // 2))  # type: ignore
+    COLORS += list(  # type: ignore
+        GREEN.range_to(  # type: ignore
+            RED,
+            MAX_ITERATIONS - MAX_ITERATIONS // 2
+        )
+    )
 
     main()

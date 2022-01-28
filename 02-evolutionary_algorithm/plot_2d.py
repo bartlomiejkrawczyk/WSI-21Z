@@ -13,12 +13,16 @@ def plot_contour_chart_2d(
 
     plot_step = furthest_point / 200
 
-    x_arr = y_arr = np.arange(-furthest_point, furthest_point, plot_step)
-    X, Y = np.meshgrid(x_arr, y_arr)
-    Z = np.empty(X.shape)
+    x_arr = y_arr = np.arange(  # type: ignore
+        -furthest_point,
+        furthest_point,
+        plot_step
+    )
+    X, Y = np.meshgrid(x_arr, y_arr)  # type: ignore
+    Z = np.empty(X.shape)  # type: ignore
 
-    for i in range(X.shape[0]):
-        for j in range(X.shape[1]):
+    for i in range(X.shape[0]):  # type: ignore
+        for j in range(X.shape[1]):  # type: ignore
             Z[i, j] = function([X[i, j], Y[i, j]])
 
     plt.contour(X, Y, Z, 40)

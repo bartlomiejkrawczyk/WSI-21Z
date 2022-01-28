@@ -3,10 +3,10 @@ from cec2017.functions import f4
 import numpy as np
 from itertools import product
 from statistics import stdev, mean
-from typing import List
+from typing import List, Callable
 
 MAX_BOUND = 100
-FUNCTION = f4
+FUNCTION: Callable[[List[float]], float] = f4  # type: ignore
 
 MUTATION_FACTORS = [0.1, 1.0, 2.0, 3.0, 4.0,
                     5.0, 10.0, 20.0, 30.0, 40.0, 50.0, 100.0]
@@ -17,7 +17,7 @@ MUTATION_PROBABILITY = 0.20
 MAX_FUNCTION_EVALUATIONS = 10_000
 
 
-def generate_table(column,
+def generate_table(column: str,
                    mutation_factor: List[float] = [1.0],
                    elite_count: List[int] = [5],
                    population_size: List[int] = [50]):
@@ -30,11 +30,11 @@ def generate_table(column,
           sep='\t')
 
     for mutation, elite, population in product(mutation_factor, elite_count, population_size):
-        values = []
+        values: List[float] = []
         for _ in range(25):
             values.append(
                 evolve(
-                    f4,
+                    FUNCTION,  # type: ignore
                     [list(np.random.uniform(-MAX_BOUND, MAX_BOUND, size=10))
                      for _ in range(population)],
                     mutation,
