@@ -112,11 +112,23 @@ def main():
                 )
 
 
+def format_qtable(qtable: List[List[float]]):
+    length = int(len(qtable) ** 0.5)
+
+    for y in range(length):
+        row = ''
+        for x in range(length):
+            row += max([('<', 0), ('V', 1), ('>', 2), ('^', 3)],
+                       key=lambda val: qtable[y * length + x][val[1]])[0] + ' '
+        print(row)
+
+
 if __name__ == '__main__':
     main()
 
-    # environment = FrozenLake(REWARD_FUNCTIONS[1])
-    # qtable = q_learning(environment, 50_000)
+    environment = FrozenLake(REWARD_FUNCTIONS[1])
+    qtable = q_learning(environment, 100_000)
+    format_qtable(qtable)
     # print(qtable)
     # print(evaluate_qtable(environment, qtable))
     # environment.reset()
